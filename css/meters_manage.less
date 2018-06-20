@@ -1,0 +1,221 @@
+.content-title {
+  position: relative;
+  height: 80px;
+  line-height: 80px;
+  font-size: 16px;
+  font-weight: bold;
+  text-indent: 70px;
+  background-color: #fff;
+  border-radius: 4px;
+  margin-bottom: 1px;
+  i {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: 25px;
+    left: 35px;
+    &.public-icon {
+      background: url("../img/public_meter.png") no-repeat;
+    }
+    &.user-icon {
+      background: url("../img/user_meter.png") no-repeat;
+    }
+    &.pre-pay-icon {
+      background: url("../img/pre_pay_meter.png") no-repeat;
+    }
+    &.meters-statistics {
+      background: url("../img/meters_statistics.png") no-repeat;
+    }
+  }
+}
+
+.content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  min-height: 622px;
+  .tree-wrapper {
+    min-width: 260px;
+    max-width: 260px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 4px;
+    margin-right: 1px;
+    .search-area {
+      margin-bottom: 15px;
+    }
+    .area-tree {
+      max-height: 630px;
+      overflow-y: scroll;
+    }
+  }
+  .main-content {
+    width: 100%;
+    background-color: #fff;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 30px;
+      justify-content: space-evenly;
+      input, > button, > div {
+        height: 40px;
+      }
+      > button {
+        font-size: 14px;
+        margin-bottom: 30px;
+      }
+      .input-community {
+        width: 200px;
+        div {
+          height: 40px;
+        }
+        span {
+          line-height: 40px;
+        }
+      }
+      .select-meters {
+        width: 100px;
+        font-size: 14px;
+        div:first-of-type {
+          height: 40px;
+        }
+        span {
+          line-height: 40px;
+        }
+      }
+      .search-meters {
+        width: 200px;
+        margin-bottom: 30px;
+      }
+    }
+    .statistics-group {
+      justify-content: flex-start;
+      font-size: 14px;
+      .select-community {
+        margin: 0 30px 30px;
+        div {
+          width: 180px;
+          height: 40px;
+          display: inline-block;
+          span {
+            line-height: 40px;
+          }
+        }
+      }
+    }
+    table {
+      margin: 0 auto 30px;
+      width: 96%;
+      border-spacing: 0;
+      border-collapse: collapse;
+      text-align: center;
+      thead {
+        background-color: #dfeffe;
+        font-size: 16px;
+        tr {
+          height: 50px;
+          th {
+            &:first-of-type {
+              padding-left: 10px;
+            }
+            &:last-of-type {
+              position: relative;
+              .add-meter {
+                margin: 5px 20px 0 0;
+                color: #2d8cf0;
+                font-size: 20px;
+                cursor: pointer;
+              }
+            }
+            &.price-unit {
+              position: relative;
+              span {
+                position: absolute;
+                width: 40px;
+                font-size: 12px;
+                color: #80848f;
+                bottom: 0;
+                right: 50%;
+                -webkit-transform: translateX(50%);
+                -moz-transform: translateX(50%);
+                -ms-transform: translateX(50%);
+                -o-transform: translateX(50%);
+                transform: translateX(50%);
+              }
+            }
+          }
+        }
+      }
+      tbody {
+        font-size: 14px;
+        tr {
+          height: 40px;
+          &:nth-of-type(2n) {
+            background: #f9f9fb;
+          }
+          td:not(.operation-td) {
+            max-width: 70px;
+            overflow: hidden;
+            white-space: nowrap;
+            -ms-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            &:first-of-type {
+              padding-left: 10px;
+            }
+          }
+        }
+      }
+    }
+    @media (max-width: 1450px) {
+      table {
+        thead {
+          font-size: 14px;
+        }
+        tbody {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+// 弹窗样式
+.add-meter-modal {
+  div {
+    font-size: 14px;
+  }
+  .modal-header {
+    font-size: 16px;
+  }
+  .input-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 62%;
+    margin: 15px auto;
+    line-height: 32px;
+    > div {
+      width: 200px;
+      .electric-price, .init-price {
+        width: 160px;
+      }
+    }
+    .current-unit {
+      width: 200px;
+      background-color: #bbbec4;
+      border-radius: 4px;
+      text-indent: 10px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  .code-wrapper {
+    position: relative;
+    .meter-code {
+      position: absolute;
+      left: 100px;
+    }
+  }
+}

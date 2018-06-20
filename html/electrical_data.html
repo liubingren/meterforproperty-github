@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧能源管理平台-电表数据</title>
+</head>
+<body>
+<div id="electrical_data" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper" v-cloak>
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">用电数据</breadcrumb-item>
+                <breadcrumb-item type="primary">
+                    <span class="content-group">
+                        <!--判断显示选中样式-->
+                        <span :class="{unselected:meterType!=='publicMeter'}"
+                              data-type="publicMeter" data-typeid="1" @click="toggleMeterType($event)">
+                            瓦良格公共区域监控电表
+                        </span>
+                        <span :class="{unselected:meterType!=='userMeter'}"
+                              data-type="userMeter" data-typeid="2" @click="toggleMeterType($event)">
+                            瓦良格住户监控电表
+                        </span>
+                        <span :class="{unselected:meterType!=='prePayMeter'}"
+                              data-type="prePayMeter" data-typeid="3" @click="toggleMeterType($event)">
+                            瓦良格预付费电表
+                        </span>
+                        <span :class="{unselected:meterType!=='electricitytatistics'}"
+                              data-type="electricitytatistics" data-typeid="4" @click="toggleMeterType($event)">
+                            用电统计
+                        </span>
+                    </span>
+                </breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title" v-if="meterType==='publicMeter'">
+                    <i class="public-icon"></i>瓦良格公共区域监控电表
+                </div>
+                <div class="content-title" v-else-if="meterType==='userMeter'">
+                    <i class="user-icon"></i>瓦良格住户电表
+                </div>
+                <div class="content-title" v-else-if="meterType==='prePayMeter'">
+                    <i class="pre-pay-icon"></i>瓦良格预付费电表
+                </div>
+                <div class="content-title" v-else-if="meterType==='electricitytatistics'">
+                    <i class="meters-statistics"></i>用电统计
+                </div>
+                <div class="content-wrapper">
+                    <!--dom树-->
+                    <div class="tree-wrapper" @click="getElectricaltData()">
+                            <!--树形控件-->
+                            <vrg-tree></vrg-tree>
+                        </div>
+                    <!--表格-->
+                    <div class="main-content" v-if="meterType!=='electricitytatistics'">
+                        <div class="btn-group">
+                            <div class="time-group">
+                                <label>开始时间：</label>
+                                <date-picker size="large" type="datetime"
+                                             :value="startime"placeholder="请选择时间"
+                                             style="width: 225px" @on-change="handleChange($event,1)" @on-ok="getElectricaltData(1)">
+                                </date-picker>
+                            </div>
+                           <div class="time-group">
+                               <label>结束时间：</label>
+                               <date-picker size="large" type="datetime"
+                                            :value="endtime"  placeholder="请选择时间"
+                                            style="width: 225px" @on-change="handleChange($event,2)" @on-ok="getElectricaltData(1)">
+                               </date-picker>
+                           </div>
+                           <!-- 搜索框-->
+                            <div class="time-group" v-if="meterType!=='prePayMeter'">
+                                <Icon type="search" @click="searchInfor()"></Icon>
+                                <i-Input placeholder="请输入电表编号/安装位置" size="large" style="width: 220px" v-model.trim="keywords"></i-Input>
+                            </div>
+                            <div class="time-group" v-if="meterType==='prePayMeter'">
+                                <Icon type="search" @click="searchInfor()"></Icon>
+                                <i-Input placeholder="请输入电表编号/用户名称" size="large" style="width: 220px" v-model.trim="keywords"></i-Input>
+                            </div>
+                            <a class="export-data ivu-btn ivu-btn-primary" @click ="exportInfor($event)">导出</a>
+                        </div>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>小区名称</th>
+                                <th>电表编号</th>
+
+                                <!--只有住户电表显示-->
+                                <th v-if="meterType==='userMeter'">楼栋号</th>
+                                <th v-if="meterType==='userMeter'">房号</th>
+
+                                <!--只有预付费电表显示-->
+                                <th v-if="meterType==='prePayMeter'">用户编号</th>
+                                <th v-if="meterType==='prePayMeter'">用户名称</th>
+
+                                <!--预付费电表不显示-->
+                                <th v-if="meterType!=='prePayMeter'">安装位置</th>
+                                <th v-if="meterType==='publicMeter'">相位</th>
+                                <th>用电类型</th>
+                                <!--只有预付费电表显示-->
+                                <th v-if="meterType==='prePayMeter'">变比</th>
+
+                                <th class="price-unit">
+                                    起始电表读数
+                                    <span>(度)</span>
+                                </th>
+                                <th class="price-unit">
+                                    结束电表读数
+                                    <span>(度)</span>
+                                </th>
+                                <th class="price-unit">
+                                    用电量
+                                    <span>(度)</span>
+                                </th>
+                                <th class="price-unit">
+                                    总用电量
+                                    <span>(度)</span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="item in searchInfor(keywords)" :key="item.id" :class="{ colorRed: colorFalg }">
+                                <td :title="item.location_name">{{ item.location_name }}</td> <!--小区名称-->
+                                <td>{{ item.mid  }}</td>  <!--电表编号-->
+                                <!--只有住户电表显示-->
+                                <td v-if="meterType==='userMeter'">{{ item.building }}</td> <!--楼栋号-->
+                                <td v-if="meterType==='userMeter'">{{ item.room_number }}</td><!--房号-->
+                                <!--预付费电表显示-->
+                                <td v-if="meterType==='prePayMeter'">{{ item.usercode}}</td><!--用户编号-->
+                                <td v-if="meterType==='prePayMeter'">{{ item.username}}</td><!--用户名称-->
+                                <!--预付费电表不显示-->
+                                <td :title="item.install_address" v-if="meterType!=='prePayMeter'">{{ item.install_address }}</td> <!--安装地址-->
+                                <!--只有公共电表显示-->
+                                <td v-if="meterType==='publicMeter'"> {{ item.phase }}</td>  <!--相位-->
+                                <td>{{ item.type }}</td><!--用电类型-->
+                                <td v-if="meterType==='prePayMeter'">{{ item.ratio }}</td><!--变比-->
+                                <td>{{ item.startw }}</td><!--开始读数-->
+                                <td>{{ item.endw }}</td><!--结束读数-->
+                                <td>{{ item.w }}</td><!--用电量-->
+                                <td>{{ item.countw }}</td> <!--总用电量-->
+                            </tr>
+                            </tbody>
+                        </table>
+                        <Page class="page-bar" id="page-bar" :total="totalpage" @on-change="pageInfor($event)"
+                              show-elevator show-total></Page>
+                    </div>
+                    <div class="main-content" v-else>
+                        <div class="btn-group">
+                            <div class="time-group">
+                                <label>时间类型：</label>
+                                <i-select size="large" style="width:80px">
+                                    <i-option value="1">年</i-option>
+                                    <i-option value="2">月</i-option>
+                                    <i-option value="3">日</i-option>
+                                </i-select>
+                            </div>
+                            <div class="time-group">
+                                <label>时间：</label>
+                                <date-picker size="large" type="date" placeholder="请选择时间"></date-picker>
+                            </div>
+                            <div class="time-group">
+                                <label>区域类型：</label>
+                                <i-select size="large" style="width:200px">
+                                    <i-option value="1">{{ '选项一' }}</i-option>
+                                </i-select>
+                            </div>
+                            <div class="time-group">
+                                <label>区域：</label>
+                                <i-select size="large" style="width:200px">
+                                    <i-option value="1">{{ '选项一' }}</i-option>
+                                </i-select>
+                            </div>
+                            <i-button type="primary" class="search--data" @click="searchInfor()">
+                                搜索
+                            </i-button>
+                        </div>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>电表类型</th>
+                                <th class="price-unit">
+                                    用电量
+                                    <span>(度)</span>
+                                </th>
+                                <th class="price-unit">
+                                    金额
+                                    <span>(元)</span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>666666</td>
+                                <td>666666</td>
+                                <td>666666</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <Page class="page-bar" id="page-bar" :total="totalpage" @on-change="pageInfor($event)"
+                        show-elevator show-total></Page>
+                    </div>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+
+</div>
+<script src="../js/electrical_data.js"></script>
+</body>
+</html>

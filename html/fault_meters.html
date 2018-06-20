@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>能源管理平台-故障电表</title>
+</head>
+<body>
+<div id="fault-meters" class="page-rout">
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper">
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">故障电表</breadcrumb-item>
+                <breadcrumb-item type="primary">
+                    <span class="content-group">
+                        <!--判断显示选中样式-->
+                        <span :class="{unselected:meterType!=='publicMeter'}"
+                              data-type="publicMeter" @click="toggleMeterType($event)">
+                            瓦良格公共区域监控电表
+                        </span>
+                        <span :class="{unselected:meterType!=='userMeter'}"
+                              data-type="userMeter" @click="toggleMeterType($event)">
+                            瓦良格住户监控电表
+                        </span>
+                        <span :class="{unselected:meterType!=='prePayMeter'}"
+                              data-type="prePayMeter" @click="toggleMeterType($event)">
+                            瓦良格预付费电表
+                        </span>
+                    </span>
+                </breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title" v-if="meterType==='publicMeter'" v-cloak>
+                    <i class="public-icon"></i>瓦良格公共区域监控电表
+                </div>
+                <div class="content-title" v-else-if="meterType==='userMeter'" v-cloak>
+                    <i class="user-icon"></i>瓦良格住户电表
+                </div>
+                <div class="content-title" v-else-if="meterType==='prePayMeter'" v-cloak>
+                    <i class="pre-pay-icon"></i>瓦良格预付费电表
+                </div>
+                <div class="content-wrapper">
+                    <div class="btn-group">
+                        <i-button type="primary">模板下载</i-button>
+                        <i-button type="primary">导出</i-button>
+                        <i-select class="select-meter"
+                                  placeholder="请输入电表编号/安装位置">
+
+                        </i-select>
+                    </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>
+                                <Checkbox></Checkbox>
+                            </th>
+                            <th>小区名称</th>
+                            <th>电表编号</th>
+                            <th>楼栋号</th>
+                            <th>房号</th>
+                            <th>安装位置</th>
+                            <th>故障时间</th>
+                            <th>处理时间</th>
+                            <th>状态</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <Checkbox></Checkbox>
+                            </td>
+                            <td>666666</td>
+                            <td>666666</td>
+                            <td>666666</td>
+                            <td>666666</td>
+                            <td>666666</td>
+                            <td>666666</td>
+                            <td>
+                                <i-button>检测</i-button>
+                            </td>
+                            <td>666666</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <Page class="page-bar" id="page-bar" :total="100"
+                          show-elevator show-total></Page>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+</div>
+<script src="../js/fault_meters.js"></script>
+</body>
+</html>

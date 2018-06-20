@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧能源管理平台-电表管理</title>
+</head>
+<body>
+<div id="online-manage" class="page-rout">
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper">
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">电表在线管理</breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title" v-cloak>
+                    <i class="public-icon"></i>
+                    电表在线管理
+                </div>
+                <div class="content-wrapper">
+                    <div class="tree-wrapper">
+                        <i-input class="search-area" placeholder="请输入小区名称">
+                        </i-input>
+                        <Tree class="area-tree" :data="treeData"></Tree>
+                    </div>
+                    <div class="main-content">
+                        <div class="btn-group">
+                            <i-select class="select-meters" placeholder="在线">
+                            </i-select>
+                            <i-input class="search-meters"
+                                     placeholder="请输入电表编号/安装位置">
+                            </i-input>
+                            <div class="status-counts">
+                                在线(个): <span>30</span>
+                                离线(个): <span>06</span>
+                            </div>
+                        </div>
+                        <table>
+                            <thead v-cloak>
+                            <tr>
+                                <th>小区名称</th>
+                                <th>电表编号</th>
+                                <th>安装位置</th>
+                                <th>楼栋号</th>
+                                <th>房号</th>
+                                <th>连接SSID</th>
+                                <th>连接密码</th>
+                                <th>固件版本号</th>
+                                <th>MOST</th>
+                                <th>设备状态</th>
+                                <th>最后通讯时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <Page class="page-bar" :total="100"
+                              show-elevator show-total></Page>
+                    </div>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+</div>
+
+<script src="../js/online_manage.js"></script>
+</body>
+</html>

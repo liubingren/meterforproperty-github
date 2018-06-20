@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧能源管理平台-首页</title>
+</head>
+<body>
+<div id="home_page" class="page-rout">
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper" v-cloak>
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">首页</breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--个人信息-->
+                    <div class="personal-infor">
+                        <div class="pi-top">
+                            <div class="pi-img">
+                                <span>{{ userName }}</span>
+                            </div>
+                            <div class="pi-infor">
+                                <div><span>角色</span><span>{{ role }}</span></div>
+                                <div><span>公司</span><span>{{ company }}</span></div>
+                            </div>
+                        </div>
+                        <div class="pi-bottom">
+                            <div class="pi-btop">基本信息</div>
+                            <div class="pi-bbottom">
+                                <div>
+                                    <span>
+                                        <i class="ivu-icon ivu-icon-podium"></i>公司名称
+                                    </span>
+                                    <span>{{ company }}</span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <i class="ivu-icon ivu-icon-location"></i>公司地址
+                                    </span>
+                                    <span>{{ companyAddress }}</span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <i class="ivu-icon ivu-icon-android-call"></i>联系电话
+                                    </span>
+                                    <span>{{ contactPhone }}</span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <i class="ivu-icon ivu-icon-email"></i>联系邮箱
+                                    </span>
+                                    <span>{{ contactEmail }}</span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <i class="ivu-icon ivu-icon-social-buffer"></i>接入单位
+                                    </span>
+                                    <span>{{ accessUnit + '个'}} </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <!--设备统计-->
+                <div class="equipment-statistics">
+                    <div class="es-header">设备统计</div>
+                    <div class="electricmeters-Total">
+                        <h1>{{ total }}</h1>
+                        <span>电表总数(个)</span>
+                    </div>
+                    <div id="total_charts" class="total-charts">
+
+                    </div>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+</div>
+<script src="../js/home_page.js"></script>
+</body>
+</html>

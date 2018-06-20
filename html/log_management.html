@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧能源管理平台-日志管理</title>
+</head>
+<body>
+<div id="log_management" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper" v-cloak>
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">日志管理</breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <div class="content-title">
+                    <i class="public-icon"></i>日志管理
+                </div>
+                <div class="content-wrapper">
+                    <div class="search-group">
+                        <label>关键字：</label>
+                        <i-Input placeholder="请输入操作用户/模块/类别" size="large" style="width: 220px"></i-Input>
+                        <i-button type="primary">搜索</i-button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>操作用户</th>
+                                <th>操作模块</th>
+                                <th>IP地址</th>
+                                <th>操作类别</th>
+                                <th>操作内容</th>
+                                <th>操作时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>3333333333333333333333333333333333332</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                                <td>7777777777777777777777777777777777777777777</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <Page class="page-bar" :total="100"
+                          show-elevator show-total></Page>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+</div>
+<script src="../js/log_management.js"></script>
+</body>
+</html>

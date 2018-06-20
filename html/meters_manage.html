@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧能源管理平台-电表管理</title>
+</head>
+<body>
+<div id="meter-manage" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper">
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">电表管理</breadcrumb-item>
+                <breadcrumb-item type="primary">
+                    <span class="content-group">
+                        <!--判断显示选中样式-->
+                        <span :class="{unselected:meterType!=='publicMeter'}"
+                              data-type="publicMeter" @click="toggleMeterType($event)">
+                            瓦良格公共区域监控电表
+                        </span>
+                        <span :class="{unselected:meterType!=='userMeter'}"
+                              data-type="userMeter" @click="toggleMeterType($event)">
+                            瓦良格住户监控电表
+                        </span>
+                        <span :class="{unselected:meterType!=='prePayMeter'}"
+                              data-type="prePayMeter" @click="toggleMeterType($event)">
+                            瓦良格预付费电表
+                        </span>
+                        <span :class="{unselected:meterType!=='metersStatistics'}"
+                              data-type="metersStatistics" @click="toggleMeterType($event)">
+                            电表安装统计
+                        </span>
+                    </span>
+                </breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title" v-if="meterType==='publicMeter'">
+                    <i class="public-icon"></i>瓦良格公共区域监控电表
+                </div>
+                <div class="content-title" v-else-if="meterType==='userMeter'">
+                    <i class="user-icon"></i>瓦良格住户电表
+                </div>
+                <div class="content-title" v-else-if="meterType==='prePayMeter'">
+                    <i class="pre-pay-icon"></i>瓦良格预付费电表
+                </div>
+                <div class="content-title" v-else-if="meterType==='metersStatistics'">
+                    <i class="meters-statistics"></i>电表安装统计
+                </div>
+                <div class="content-wrapper">
+                    <div class="tree-wrapper">
+                        <!--树形控件-->
+                        <vrg-tree @father-event="getSonData($event)"></vrg-tree>
+                    </div>
+                    <div class="main-content" v-if="meterType!=='metersStatistics'">
+                        <div class="btn-group">
+                            <i-button type="primary" class="real-time-read-meter"
+                                      v-if="meterType!=='prePayMeter'">
+                                实时抄表
+                            </i-button>
+                            <i-button type="primary" class="month-read-meter"
+                                      v-if="meterType!=='prePayMeter'">
+                                月度抄表
+                            </i-button>
+                            <i-button type="primary" class="import-data">
+                                导入
+                            </i-button>
+                            <i-button type="primary" class="update-meters"
+                                      v-if="meterType!=='prePayMeter'">
+                                批量更新
+                            </i-button>
+                            <i-button type="primary" class="export-data">
+                                导出
+                            </i-button>
+                            <i-button type="primary" class="download-model">
+                                模板下载
+                            </i-button>
+                            <i-select class="select-meters" placeholder="在线"
+                                      v-if="meterType!=='prePayMeter'">
+                                <i-option v-for="item of lineStatusList"
+                                          :value="item.value" :key="item.value">
+                                    {{item.label}}
+                                </i-option>
+                            </i-select>
+                            <i-input class="search-meters"
+                                     placeholder="请输入电表编号/安装位置">
+                            </i-input>
+                            <!--公共电表所需按钮-->
+                            <i-button type="primary" class="bind-meters"
+                                      v-if="meterType==='publicMeter'">
+                                绑定电表
+                            </i-button>
+                            <i-button type="primary" class="unbind-meters"
+                                      v-if="meterType==='publicMeter'">
+                                解绑电表
+                            </i-button>
+                        </div>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th v-if="meterType!=='prePayMeter'">
+                                    <Checkbox></Checkbox>
+                                </th>
+                                <th>小区名称</th>
+                                <th>电表编号</th>
+
+                                <!--只有住户电表显示-->
+                                <th v-if="meterType==='userMeter'">楼栋号</th>
+                                <th v-if="meterType==='userMeter'">房号</th>
+
+                                <!--只有预付费电表显示-->
+                                <th v-if="meterType==='prePayMeter'">设备密钥</th>
+                                <th v-if="meterType==='prePayMeter'">用户编号</th>
+                                <th v-if="meterType==='prePayMeter'">用户名称</th>
+                                <th v-if="meterType==='prePayMeter'">手机号码</th>
+                                <th v-if="meterType==='prePayMeter'">变比</th>
+                                <th v-if="meterType==='prePayMeter'">剩余金额</th>
+
+                                <!--预付费电表不显示-->
+                                <th v-if="meterType!=='prePayMeter'">安装位置</th>
+                                <th class="price-unit" v-if="meterType!=='prePayMeter'">
+                                    电价
+                                    <span>(元/度)</span>
+                                </th>
+                                <th v-if="meterType!=='prePayMeter'">当前读数</th>
+
+                                <!--只有公共电表显示-->
+                                <th v-if="meterType==='publicMeter'">相位</th>
+
+                                <th>电表初始值</th>
+                                <th>用电类型</th>
+                                <th>设备状态</th>
+                                <th>相关操作</th>
+                                <th>
+                                    <Icon type="plus" class="add-meter"
+                                          title="添加电表"
+                                          @click="openAddModal()"></Icon>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="meter of metersArr" :key="meter.id">
+                                <td v-if="meterType!=='prePayMeter'">
+                                    <Checkbox>
+                                    </Checkbox>
+                                </td>
+                                <td>{{meter.location_name}}</td>
+                                <td>{{meter.mid}}</td>
+
+                                <!--只有住户电表显示-->
+                                <td v-if="meterType==='userMeter'">{{meter.building}}</td>
+                                <td v-if="meterType==='userMeter'">{{meter.room_number}}</td>
+
+                                <!--预付费电表显示-->
+                                <td v-if="meterType==='prePayMeter'">{{meter.mkeys}}</td>
+                                <td v-if="meterType==='prePayMeter'">{{meter.usercode}}</td>
+                                <td v-if="meterType==='prePayMeter'">{{meter.username}}</td>
+                                <td v-if="meterType==='prePayMeter'">{{meter.phonenumber}}</td>
+                                <td v-if="meterType==='prePayMeter'">{{meter.ratio}}</td>
+                                <td v-if="meterType==='prePayMeter'">{{meter.balance}}</td>
+
+                                <!--预付费电表不显示-->
+                                <td v-if="meterType!=='prePayMeter'">
+                                    {{meter.install_address}}
+                                </td>
+                                <td
+                                        v-if="meterType!=='prePayMeter'">
+                                    {{meter.price }}
+                                </td>
+                                <td v-if="meterType!=='prePayMeter'">
+                                    {{meter.w}}
+                                </td>
+
+                                <!--只有公共电表显示-->
+                                <td v-if="meterType==='publicMeter'">
+                                    {{meter.phase}}
+                                </td>
+
+                                <td>{{meter.initval}}</td>
+                                <td>{{meter.type}}</td>
+                                <td v-if="meter.status">使用</td>
+                                <td v-if="meter.status===0">停用</td>
+
+                                <td class="operation-td">
+                                    <i-button type="ghost"
+                                              @click="openEditModal(
+                                              meter.mid,meter.w,
+                                              meter.initval,
+                                              meter.price,
+                                              meter.install_address,
+                                              meter.phase,meter.type,
+                                              meter.status)">
+                                        编辑
+                                    </i-button>
+                                    <i-button type="ghost"
+                                              v-if="meterType!=='prePayMeter'">
+                                        删除
+                                    </i-button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <Page class="page-bar"
+                              :total="allRow"
+                              @on-change="getCurrentPage($event)"
+                              show-elevator show-total></Page>
+                    </div>
+                    <div class="main-content" v-else>
+                        <div class="btn-group statistics-group">
+                            <div class="select-community">小区:
+                                <i-select></i-select>
+                            </div>
+                            <div>日期:
+                                <date-picker type="datetime"
+                                             class="statistics-date"
+                                             @on-change="">
+                                </date-picker>
+                            </div>
+                        </div>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>电表类型</th>
+                                <th>当前电表总数(个)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(item,index) of countMeters" :key="index">
+                                <td>{{item.meter_type}}</td>
+                                <td>{{item.counts}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <Page class="page-bar"
+                              :total="allRow"
+                              @on-change="getCurrentPage($event)"
+                              show-elevator show-total></Page>
+                    </div>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+
+    <!--添加电表弹窗-->
+    <modal class="add-meter-modal" v-model="meterModal"
+           :mask-closable="false" :loading="modelLoading"
+           @on-ok="submitMeter()">
+        <p slot="header" class="modal-header"
+           v-if="isAddModal">添加电表</p>
+        <p slot="header" class="modal-header"
+           v-else>编辑电表</p>
+        <div class="input-wrapper code-wrapper">电表编号:
+            <i-input autofocus v-if="isAddModal"
+                     v-model="meterCode"></i-input>
+            <span class="meter-code" v-else>
+                {{meterCode}}
+            </span>
+        </div>
+
+        <div class="input-wrapper">
+            安装地址:
+            <div class="current-unit"
+                 :title="currentAddr">
+                {{currentAddr}}
+            </div>
+        </div>
+        <div class="input-wrapper">
+            &nbsp;
+            <i-input v-model="installAddr"
+                     placeholder="请输入安装位置"></i-input>
+        </div>
+        <div class="input-wrapper">
+            经度:
+            <i-input v-model="meterLon"
+                     @on-blur="isNum(meterLon)"></i-input>
+        </div>
+        <div class="input-wrapper">
+            纬度:
+            <i-input v-model="meterLat"
+                     @on-blur="isNum(meterLat)"></i-input>
+        </div>
+        <div class="input-wrapper">设备状态:
+            <i-select v-model="selectedStatus">
+                <i-option v-for="item of deviceStatus"
+                          :value="item.value"
+                          :key="item.value">
+                    {{item.label}}
+                </i-option>
+            </i-select>
+        </div>
+
+        <!--<div class="input-wrapper">-->
+        <!--用电类型:-->
+        <!--<i-select></i-select>-->
+        <!--</div>-->
+
+        <!--只在公共电表显示-->
+        <div v-if="meterType==='publicMeter'"
+             class="input-wrapper">
+            相位:
+            <i-select v-model="selectedPhase">
+                <i-option v-for="item of phaseList"
+                          :value="item.value"
+                          :key="item.value">
+                    {{item.label}}
+                </i-option>
+            </i-select>
+        </div>
+
+        <!--只在住户电表显示-->
+        <div class="input-wrapper"
+             v-if="meterType==='userMeter'">
+            楼栋号:
+            <i-input v-model="buildingNum"></i-input>
+        </div>
+        <div class="input-wrapper"
+             v-if="meterType==='userMeter'">
+            房号:
+            <i-input v-model="roomNum"></i-input>
+        </div>
+
+        <!--预付费电表不显示-->
+        <div class="input-wrapper"
+             v-if="meterType!=='prePayMeter'">
+            电表初始值:
+            <div>
+                <i-input class="init-price"
+                         v-model="initValue"
+                         @on-blur="isNum(initValue)"></i-input>
+                <span>度</span>
+            </div>
+        </div>
+        <div class="input-wrapper"
+             v-if="meterType!=='prePayMeter'">
+            电价设置:
+            <div>
+                <i-input class="electric-price"
+                         v-model="electricPrice"
+                         @on-blur="isNum(electricPrice)"></i-input>
+                <span>元/度</span>
+            </div>
+        </div>
+
+        <!--只有预付费电表显示-->
+        <div class="input-wrapper"
+             v-if="meterType==='prePayMeter'">
+            设备密钥:
+            <i-input v-model="mkeys"></i-input>
+        </div>
+        <div class="input-wrapper"
+             v-if="meterType==='prePayMeter'">
+            用户编号:
+            <i-input v-model="usercode"></i-input>
+        </div>
+        <div class="input-wrapper"
+             v-if="meterType==='prePayMeter'">
+            用户名称:
+            <i-input v-model="username"></i-input>
+        </div>
+        <div class="input-wrapper"
+             v-if="meterType==='prePayMeter'">
+            手机号码:
+            <i-input v-model="phonenumber"
+                     @on-blur="isPhoneNum(phonenumber)"></i-input>
+        </div>
+        <div class="input-wrapper"
+             v-if="meterType==='prePayMeter'">
+            变比:
+            <i-input v-model="ratio"
+                     @on-blur="isNum(ratio)"></i-input>
+        </div>
+    </modal>
+</div>
+
+<script src="../js/meters_manage.js"></script>
+</body>
+</html>

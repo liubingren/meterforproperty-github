@@ -1,0 +1,92 @@
+body {
+  height: 100%;
+  min-height: 948px;
+}
+body [v-cloak] {
+  display: none;
+}
+body .login-bg {
+  min-width: 1366px;
+  height: 100%;
+  min-height: 948px;
+  background: url("../img/login_background.png") no-repeat;
+  background-size: 100% 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+body .login-bg .logo {
+  width: 390px;
+  height: 164px;
+  background: url("../img/login_logo.png") no-repeat;
+}
+body .login-bg .loginForm {
+  width: 380px;
+  height: 380px;
+  background-color: rgba(250, 250, 250, 0.5);
+  border-radius: 6px;
+  margin-top: 20px;
+  margin-bottom: 200px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+body .login-bg .loginForm h1 {
+  margin: 30px 0 10px 0;
+  font-size: 20px;
+  color: #1c2438;
+}
+body .login-bg .loginForm form div {
+  font-size: 14px;
+  position: relative;
+  margin: 20px 0;
+}
+body .login-bg .loginForm form div i {
+  position: absolute;
+  left: 12px;
+  top: 13px;
+  font-size: 25px;
+  z-index: 999;
+}
+body .login-bg .loginForm form div input {
+  width: 320px;
+  height: 50px;
+  padding: 8px 8px 8px 40px;
+  border-radius: 6px;
+}
+body .login-bg .loginForm form div:nth-child(3) .yanzhengma_input {
+  width: 150px;
+  margin-right: 10px;
+}
+body .login-bg .loginForm form div:nth-child(3) .verification {
+  width: 100px;
+  height: 48px;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 0 8px;
+  letter-spacing: 8px;
+  text-align: center;
+  margin-right: 8px;
+  border: none;
+}
+body .login-bg .loginForm form div:nth-child(3) a {
+  color: #495060;
+}
+body .login-bg .loginForm form .login-bt {
+  width: 320px;
+  height: 50px;
+  text-align: center;
+  border-radius: 6px;
+  color: #fff;
+  background-color: #2b85e4;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+}
+body .login-bg .loginForm form button:hover {
+  background-color: #1272e4;
+}
+body .login-bg .platform-version {
+  color: #dadada;
+}
