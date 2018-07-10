@@ -1,9 +1,0 @@
-# Created by .ignore support plugin (hsz.mobi)
-
-.cache
-dist
-node_modules
-.idea
-Swagger
-WEB-INF
-package-lock.json
