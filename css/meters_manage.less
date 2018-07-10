@@ -1,0 +1,320 @@
+@tableBorder: 1px solid #dfeffe;
+
+.content-title {
+  position: relative;
+  height: 80px;
+  line-height: 80px;
+  font-size: 16px;
+  font-weight: bold;
+  text-indent: 70px;
+  background-color: #fff;
+  border-radius: 4px;
+  margin-bottom: 1px;
+  i {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: 25px;
+    left: 35px;
+    &.public-icon {
+      background: url("../img/public_meter.png") no-repeat;
+    }
+    &.user-icon {
+      background: url("../img/user_meter.png") no-repeat;
+    }
+    &.pre-pay-icon {
+      background: url("../img/pre_pay_meter.png") no-repeat;
+    }
+    &.meters-statistics {
+      background: url("../img/meters_statistics.png") no-repeat;
+    }
+  }
+}
+
+.content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  min-height: 622px;
+}
+
+.main-content {
+  width: 100%;
+  background-color: #fff;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    justify-content: space-evenly;
+    input, > button, > div {
+      height: 40px;
+    }
+    > button {
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+    .input-community {
+      width: 200px;
+      div {
+        height: 40px;
+      }
+      span {
+        line-height: 40px;
+      }
+    }
+    .select-meters {
+      width: 100px;
+      font-size: 14px;
+      div:first-of-type {
+        height: 40px;
+      }
+      span {
+        line-height: 40px;
+      }
+    }
+    .search-meters {
+      width: 200px;
+      margin-bottom: 30px;
+      .meters-code-addr {
+        height: 40px;
+      }
+    }
+    .export-data, .import-data,
+    .download-model, .update-meters {
+      display: block;
+      width: 60px;
+      height: 40px;
+      line-height: 25px;
+      color: #fff;
+      font-size: 14px;
+    }
+    .import-data, .update-meters {
+      position: relative;
+      input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 60px;
+        overflow: hidden;
+        opacity: 0;
+        cursor: pointer;
+      }
+    }
+    .download-model, .update-meters {
+      width: 88px;
+    }
+  }
+  table {
+    margin: 0 auto 30px;
+    width: 96%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    text-align: center;
+    overflow: hidden;
+    &.statistics-table {
+      margin-top: 22px;
+    }
+    thead {
+      background-color: #dfeffe;
+      font-size: 16px;
+      tr {
+        height: 50px;
+        th {
+          &:first-of-type {
+            padding-left: 10px;
+          }
+          &:last-of-type {
+            position: relative;
+            .add-meter {
+              margin: 5px 20px 0 0;
+              color: #2d8cf0;
+              font-size: 20px;
+              cursor: pointer;
+            }
+          }
+          &.price-unit {
+            position: relative;
+            span {
+              position: absolute;
+              width: 40px;
+              font-size: 12px;
+              color: #80848f;
+              bottom: 0;
+              right: 50%;
+              -webkit-transform: translateX(50%);
+              -moz-transform: translateX(50%);
+              -ms-transform: translateX(50%);
+              -o-transform: translateX(50%);
+              transform: translateX(50%);
+            }
+          }
+        }
+      }
+    }
+    tbody {
+      font-size: 14px;
+      tr {
+        height: 40px;
+        &:nth-of-type(2n) {
+          background: #f9f9fb;
+        }
+        td:not(.operation-td) {
+          max-width: 70px;
+          overflow: hidden;
+          white-space: nowrap;
+          -ms-text-overflow: ellipsis;
+          text-overflow: ellipsis;
+          &.checkbox-td {
+            width: 24px;
+          }
+          &.bind-line {
+            position: relative;
+            width: 20px;
+            height: 100%;
+            right: 50px;
+            filter: drop-shadow(#02093d 50px 0);
+          }
+          &.bind-line-1 {
+            background: url("../img/meter_bind_1.png");
+          }
+          &.bind-line-2 {
+            background: url("../img/meter_bind_2.png");
+          }
+          &.bind-line-3 {
+            background: url("../img/meter_bind_3.png");
+          }
+        }
+      }
+    }
+  }
+}
+
+// 弹窗样式
+.add-meter-modal {
+  div {
+    font-size: 14px;
+  }
+  .modal-header {
+    font-size: 16px;
+  }
+  .input-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 62%;
+    margin: 15px auto;
+    line-height: 32px;
+    > div {
+      width: 200px;
+      .electric-price, .init-price {
+        width: 160px;
+      }
+    }
+    .current-unit {
+      width: 200px;
+      background-color: #bbbec4;
+      border-radius: 4px;
+      text-indent: 10px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  .code-wrapper {
+    position: relative;
+    .meter-code {
+      position: absolute;
+      left: 100px;
+    }
+  }
+}
+
+// 抄表弹窗
+.read-meter-modal {
+  .ivu-modal { // iView 自动生成的类名
+    width: 1000px !important;
+    .modal-header {
+      font-size: 16px;
+    }
+    .info-bar, table {
+      margin: 0 auto;
+      width: 90%;
+    }
+    .info-bar {
+      display: flex;
+      position: relative;
+      margin-bottom: 20px;
+      .unit-name {
+        font-size: 14px;
+        font-weight: bold;
+        margin-right: 50px;
+      }
+      .read-time {
+        font-size: 14px;
+        line-height: 24px;
+        color: #80848f;
+      }
+      .last-month {
+        margin-right: 30px;
+      }
+      .export-data {
+        position: absolute;
+        right: 0;
+        top: -7px;
+        display: block;
+        width: 60px;
+        height: 40px;
+        line-height: 25px;
+        color: #fff;
+        font-size: 14px;
+      }
+    }
+    table {
+      border-spacing: 0;
+      border-collapse: collapse;
+      text-align: center;
+      thead {
+        height: 60px;
+        background-color: #dfeffe;
+        border: @tableBorder;
+        font-size: 16px;
+        .with-unit {
+          position: relative;
+          top: -8px;
+          span {
+            position: absolute;
+            width: 40px;
+            font-size: 14px;
+            color: #80848f;
+            bottom: 0;
+            right: 50%;
+            -webkit-transform: translateX(50%);
+            -moz-transform: translateX(50%);
+            -ms-transform: translateX(50%);
+            -o-transform: translateX(50%);
+            transform: translateX(50%);
+            &.p-unit {
+              width: 60px;
+            }
+          }
+        }
+      }
+      tbody {
+        color: #80848f;
+        font-size: 14px;
+        tr {
+          border-bottom: @tableBorder;
+          border-left: @tableBorder;
+          td {
+            height: 40px;
+            border-right: @tableBorder;
+          }
+        }
+      }
+    }
+    .ivu-modal-footer { // iView 自动生成的类名
+      border: none;
+    }
+  }
+}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>能源管理平台-故障电表</title>
+</head>
+<body>
+<div id="fault-meters" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper">
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">故障电表</breadcrumb-item>
+                <breadcrumb-item type="primary">
+                    <span class="content-group">
+                        <!--判断显示选中样式-->
+                        <span :class="{unselected:meterType!=='1'}"
+                              data-type="1" @click="toggleMeterType($event)">
+                            瓦良格公共区域监控电表
+                        </span>
+                        <span :class="{unselected:meterType!=='2'}"
+                              data-type="2" @click="toggleMeterType($event)">
+                            瓦良格住户监控电表
+                        </span>
+                        <span :class="{unselected:meterType!=='3'}"
+                              data-type="3" @click="toggleMeterType($event)">
+                            瓦良格预付费电表
+                        </span>
+                    </span>
+                </breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title" v-if="meterType==='1'">
+                    <i class="public-icon"></i>瓦良格公共区域监控电表
+                </div>
+                <div class="content-title" v-else-if="meterType==='2'">
+                    <i class="user-icon"></i>瓦良格住户电表
+                </div>
+                <div class="content-title" v-else-if="meterType==='3'">
+                    <i class="pre-pay-icon"></i>瓦良格预付费电表
+                </div>
+                <div class="content-wrapper">
+                    <div class="btn-group">
+                        <i-button type="primary"
+                                  @click="checkBtn()">批量处理
+                        </i-button>
+                        <a class="ivu-btn ivu-btn-primary"
+                           :href="exportUrl">导出</a>
+                        <i-input class="search-meters"
+                                 v-model="searchParams"
+                                 placeholder="请输入电表编号/安装位置">
+                            <i-button slot="append" icon="ios-search"
+                                      @click="getFaultMeters()"></i-button>
+                        </i-input>
+                    </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>
+                                <Checkbox @on-change="getCheckboxes($event)"></Checkbox>
+                            </th>
+                            <th>小区名称</th>
+                            <th>电表编号</th>
+
+                            <!--只有公共电表显示-->
+                            <th v-if="meterType==='1'">相位</th>
+
+                            <!--只有用住电表显示-->
+                            <th v-if="meterType==='2'">楼栋号</th>
+                            <th v-if="meterType==='2'">房号</th>
+
+                            <!--预付费电表不显示-->
+                            <th v-if="meterType!=='3'">安装位置</th>
+                            <!--只有预付费电表显示-->
+                            <th v-if="meterType==='3'">用户名称</th>
+                            <th v-if="meterType==='3'">用户编号</th>
+
+                            <th>故障时间</th>
+                            <th>处理时间</th>
+                            <th>状态</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(meter,index) of faultMeters" :key="meter.mid">
+                            <td>
+                                <Checkbox @on-change="getCheckboxes($event,meter.id)"
+                                          v-model="checkStatus[index]"></Checkbox>
+                            </td>
+                            <td>{{meter.location_name }}</td>
+                            <td>{{meter.mid}}</td>
+
+
+                            <!--只有公共电表显示-->
+                            <td v-if="meterType==='1'">{{meter.phase}}</td>
+
+                            <!--只有住户电表显示-->
+                            <td v-if="meterType==='2'">{{meter.building}}</td>
+                            <td v-if="meterType==='2'">{{meter.room_number}}</td>
+
+                            <!--预付费电表不显示-->
+                            <td v-if="meterType!=='3'"
+                                :title="meter.install_address">
+                                {{meter.install_address}}
+                            </td>
+                            <!--只有预付费电表显示-->
+                            <td v-if="meterType==='3'">{{meter.username}}</td>
+                            <td v-if="meterType==='3'">{{meter.usercode}}</td>
+
+                            <td :title="meter.fault_time">
+                                {{meter.fault_time}}
+                            </td>
+                            <td v-if="meter.process_time"
+                                :title="meter.process_time">
+                                {{meter.process_time}}
+                            </td>
+                            <td v-else>
+                                <i-button @click="checkBtn(meter.id,index)"
+                                          :loading="isLoadingArr[index]">
+                                    检测
+                                </i-button>
+                            </td>
+                            <td>{{meter.status}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <Page class="page-bar"
+                          :total="allRow"
+                          @on-change="getCurrentPage($event)"
+                          show-elevator show-total></Page>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+</div>
+<script src="../../js/fault_meters.js"></script>
+</body>
+</html>

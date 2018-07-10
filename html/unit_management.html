@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧能源管理平台-单位管理</title>
+</head>
+<body>
+<div id="unit_management" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper" v-cloak>
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">单位管理</breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <div class="content-title">
+                    <i class="public-icon"></i>单位管理
+                </div>
+                <div class="content-wrapper">
+                     <!--dom树-->
+                     <div class="tree-wrapper">
+                            <!--树形控件-->
+                            <vrg-tree @father-event="getSonData($event)" ref="treechild"></vrg-tree>
+                        </div>
+                    <!--表格-->
+                    <div class="main-content">
+                        <div class="headle-group">
+                            <i-button type="primary" class="btn-group" @click="addModelInfor">新建</i-button>
+                            <i-button type="primary" class="btn-group" @click="updateModel">编辑</i-button>
+                            <i-button type="primary" class="btn-group" @click="sureDelete()">删除</i-button>
+                            <i-button type="primary" class="btn-group" @click="importModel()">导入</i-button>
+                        </div> 
+                        <!-- 展示信息/修改 -->
+                        <div :class="addFlag ? 'form-infor' : 'form-infor-input'" v-if="showModal">
+                            <div class="infor">
+                                <span id="infor-name">{{ name }}</span>
+                                <span id="infor-title">{{ addFlag ? '单位管理信息详情' : '编辑信息编辑'}}</span>
+                            </div>
+                            <div class="infor">
+                                <span><i>*</i>上级区域：</span>
+                                <span v-if="addFlag">{{ list.pname }}</span>
+                                <i-input v-if="!addFlag" size="large" disabled v-model="list.pname"></i-input>
+                            </div>
+                            <div class="infor">
+                                <span><i>*</i>单位名称：</span>
+                                <span v-if="addFlag">{{ list.name }}</span>
+                                <i-input v-if="!addFlag" size="large" v-model="list.name"></i-input>
+                            </div>
+                            <div class="infor">
+                                <span><i>*</i>联系人：</span>
+                                <span v-if="addFlag">{{ list.principal }}</span>
+                                <i-input v-if="!addFlag" size="large" v-model="list.principal"></i-input>
+                            </div>
+                            <div class="infor">
+                                <span><i>*</i>联系电话：</span>
+                                <span v-if="addFlag">{{ list.phonenumber }}</span>
+                                <i-input v-if="!addFlag" size="large" v-model="list.phonenumber"></i-input>
+                            </div>
+                            <div class="infor">
+                                <span><i>*</i>联系邮箱：</span>
+                                <span v-if="addFlag">{{ list.email }}</span>
+                                <i-input v-if="!addFlag" size="large" v-model="list.email"></i-input>
+                            </div>
+                            <div class="infor">
+                                <span><i>*</i>联系地址：</span>
+                                <span v-if="addFlag">{{ list.address }}</span>
+                                <i-input v-if="!addFlag" size="large" v-model="list.address"  @on-blur="getLongLat(0)"></i-input>
+                            </div>
+                            <div class="infor">
+                                <span><i>*</i>经度：</span>
+                                <span v-if="addFlag">{{ list.longitude }}</span>
+                                <i-input v-if="!addFlag" size="large" v-model="list.longitude"></i-input>
+                            </div>
+                            <div class="infor">
+                                <span><i>*</i>纬度：</span>
+                                <span v-if="addFlag">{{ list.latitude }}</span>
+                                <i-input v-if="!addFlag" size="large" v-model="list.latitude"></i-input>
+                            </div>
+                            <i-button  v-if="!addFlag" type="ghost" @click="cancel()">取消</i-button>
+                            <i-button  v-if="!addFlag" type="primary" @click="updateInfor()">保存</i-button>
+                        </div> 
+                        <!-- 新建 -->
+                        <div class="form-infor-input" v-if="addModal">
+                                <div class="infor">
+                                    <span id="infor-name">新建单位</span>
+                                    <span id="infor-title">信息详情填写</span>
+                                </div>
+                                <div class="infor">
+                                    <span><i>*</i>上级区域：</span>
+                                    <i-input size="large" disabled v-model="pname"></i-input>
+                                </div>
+                                <div class="infor">
+                                    <span><i>*</i>单位名称：</span> <!-- v-model="userName" -->
+                                    <i-input placeholder="请输入单位名称" size="large" v-model="newName"></i-input>
+                                </div>
+                                <div class="infor">
+                                    <span><i>*</i>联系人：</span>
+                                    <i-input placeholder="请输入联系人" size="large" v-model="principal"></i-input>
+                                </div>
+                                <div class="infor">
+                                    <span><i>*</i>联系电话：</span>
+                                    <i-input placeholder="请输入联系电话" size="large" v-model="phonenumber"></i-input>
+                                </div>
+                                <div class="infor">
+                                    <span><i>*</i>联系邮箱：</span>
+                                    <i-input placeholder="请输入联系邮箱" size="large" v-model="email"></i-input>
+                                </div>
+                                <div class="infor">
+                                    <span><i>*</i>联系地址：</span>
+                                    <i-input placeholder="请输入联系地址" size="large" v-model="address" @on-blur="getLongLat(1)"></i-input>
+                                </div>
+                                <div class="infor">
+                                    <span><i>*</i>经度：</span>
+                                    <i-input placeholder="请输入经度" size="large" v-model="longitude"></i-input>
+                                </div>
+                                <div class="infor">
+                                    <span><i>*</i>纬度：</span>
+                                    <i-input placeholder="请输入经度" size="large" v-model="latitude"></i-input>
+                                </div>
+                                <i-button type="ghost" @click="cancel()">取消</i-button>
+                                <i-button type="primary" @click="postAddInfor()">保存</i-button>
+                            </div> 
+                    </div>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+<!-- 单位导入 -->
+    <modal  class-name="vertical-center-modal" class="unit-modal " v-model="unitModal" :mask-closable="false" width="400" @on-ok="postImportInfor()" :loading="loading">       
+        <p slot="header" class="modal-header">单位导入</p>          
+        <p style="margin: 10px 0;text-align: center;">请先<a :href="downUrl">下载导入模块</a>，填写好后再导入</p>
+        <div class="input-bar">   
+            <div>
+                <i-input style="margin-bottom: 10px;" v-if="file !== null" placeholder="请输导入模板" size="large" disabled v-model="file.name"></i-input>
+                <Upload :before-upload="handleUpload"  action="">
+                    <i-button type="ghost" icon="ios-cloud-upload-outline">选择文件</i-button>
+                </Upload>
+            </div>
+        </div>
+    </modal>
+    <!-- 删除确认弹框 -->
+    <Modal v-model="deleteSureModal" title="提示信息" :mask-closable="false" @on-ok="deleteInfor" width="300" class-name="vertical-center-modal">
+        <p style="margin: 10px 0; font-size: 16px; color: #848484">确认删除该单位？</p>
+    </Modal>
+
+    <!-- 个人密码设置 -->
+    <user-config></user-config>
+    <pwd-config></pwd-config>
+</div>
+<script src="../js/unit_management.js"></script>
+</body>
+</html>

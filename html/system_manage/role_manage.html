@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧能源管理平台-角色管理</title>
+</head>
+<body>
+<div id="role-manage" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper">
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">角色管理</breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title" v-cloak>
+                    <i class="public-icon"></i>
+                    角色管理
+                </div>
+                <div class="content-wrapper">
+                    <div class="main-content">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>角色名称</th>
+                                <th>角色名称值</th>
+                                <th>备注</th>
+                                <th>操作</th>
+                                <th>
+                                    <Icon type="plus" class="add-meter"
+                                          title="添加角色"
+                                          @click="openRoleModal(1)"></Icon>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(item,index) of roles" :key="index">
+                                <td>{{item.rname}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.remark}}</td>
+                                <td class="operation-td">
+                                    <i-button type="ghost"
+                                              @click="openRoleModal(0,item.id,index)">
+                                        编辑
+                                    </i-button>
+                                    <i-button type="ghost"
+                                              @click="deleteRole(item.id)">
+                                        删除
+                                    </i-button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <Page class="page-bar"
+                              :total="allRow"
+                              @on-change="getCurrentPage($event)"
+                              show-elevator show-total></Page>
+                    </div>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+
+    <!--添加/编辑弹窗-->
+    <modal class="role-modal" v-model="roleModal"
+           :mask-closable="false" :loading="modelLoading"
+           @on-ok="submitRole()">
+        <p slot="header" class="modal-header"
+           v-if="isAddModal">添加角色</p>
+        <p slot="header" class="modal-header"
+           v-else>编辑角色</p>
+        <div class="input-wrapper">
+            <span>*</span>角色名称:
+            <i-input v-model="roleName" autofocus
+                     @on-blur="noEmpty(roleName)"></i-input>
+        </div>
+        <div class="input-wrapper">
+            <span>*</span>角色名称值:
+            <i-input v-model="roleValue"
+                     @on-blur="noEmpty(roleValue)"></i-input>
+        </div>
+        <div class="input-wrapper">
+            备注:
+            <i-input v-model="remark"></i-input>
+        </div>
+    </modal>
+</div>
+
+<script src="../../js/role_manage.js"></script>
+</body>
+</html>

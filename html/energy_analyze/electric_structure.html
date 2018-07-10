@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>能源管理平台-能源分析</title>
+</head>
+<body>
+<div id="structure-analyze" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper">
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">用电结构分析</breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title" v-cloak>
+                    <i class="public-icon"></i>用电结构分析
+                </div>
+                <div class="content-wrapper">
+                    <div class="tree-wrapper">
+                        <!--树形控件-->
+                        <vrg-tree @father-event="getSonData($event)"></vrg-tree>
+                    </div>
+                    <div class="main-content">
+                        <div class="btn-group">
+                            <div>时间类型:
+                                <i-select v-model="timeType"
+                                          class="time-type">
+                                    <i-option v-for="item of timeList"
+                                              :value="item.value"
+                                              :key="item.value">
+                                        {{item.label}}
+                                    </i-option>
+                                </i-select>
+                            </div>
+                            <div>时间:
+                                <!--input type不支持动态，用v-if代替-->
+                                <date-picker type="year" @on-change="getDate($event)"
+                                             v-if="timeType==='year'"></date-picker>
+                                <date-picker type="month" @on-change="getDate($event)"
+                                             v-else-if="timeType==='month'"></date-picker>
+                                <date-picker type="date" :value="date"
+                                             @on-change="getDate($event)"
+                                             v-else-if="timeType==='date'"></date-picker>
+                            </div>
+                            <i-button type="primary"
+                                      @click="getChartData()">
+                                分析
+                            </i-button>
+                        </div>
+                        <div id="chart-wrapper"></div>
+                    </div>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+</div>
+<script src="../../js/electric_structure.js"></script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>能源管理平台-能源分析</title>
+</head>
+<body>
+<div id="wastage-analyze" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper">
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">用电损耗分析</breadcrumb-item>
+                <breadcrumb-item type="primary">
+                    <span class="content-group">
+                        <!--判断显示选中样式-->
+                        <span :class="{unselected:whichTab!=='relation'}"
+                              data-tab="relation" @click="selectTab($event)">
+                            公共用电表计量关系管理
+                        </span>
+                        <span :class="{unselected:whichTab!=='list'}"
+                              data-tab="list" @click="selectTab($event)">
+                            用电损耗分析列表
+                        </span>
+                    </span>
+                </breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title">
+                    <i class="public-icon"></i>用电损耗分析
+                </div>
+                <div class="content-wrapper">
+                    <div class="tree-wrapper">
+                        <!--树形控件-->
+                        <vrg-tree @father-event="getSonData($event)"></vrg-tree>
+                    </div>
+                    <div class="main-content" v-if="whichTab==='list'">
+                        <div class="btn-group">
+                            <div>电表编号:
+                                <i-select class="code-select"
+                                          v-model="inputCode"
+                                          filterable clearable>
+                                    <i-option v-for="item of midArr"
+                                              :key="item.value"
+                                              :value="item.value">
+                                        {{item.value}}
+                                    </i-option>
+                                </i-select>
+                            </div>
+
+                            <div>开始时间:
+                                <date-picker @on-change="getSDate($event)"
+                                             :value="startDate"></date-picker>
+                            </div>
+                            <div>结束时间:
+                                <date-picker @on-change="getEDate($event)"
+                                             :value="endDate"></date-picker>
+                            </div>
+                            <i-button type="primary"
+                                      @click="getTableData()">查询
+                            </i-button>
+                        </div>
+
+                        <div class="main-list-wrapper">
+                            <ul class="list-header">
+                                <li>序号</li>
+                                <li>展开/折叠</li>
+                                <li>小区名称</li>
+                                <li>电表编号</li>
+                                <li>安装位置</li>
+                                <li>用电类型</li>
+                                <li class="with-unit">
+                                    总用电量
+                                    <span>(Kwh)</span>
+                                </li>
+                            </ul>
+                            <div class="list-body">
+                                <ul v-for="(item,index) of tableData"
+                                    :key="index">
+                                    <li>{{index+1}}</li>
+                                    <li>
+                                        <button class="fold-td" title="点击展开"
+                                                :id="item.meterId"
+                                                onclick="getChildrenMeters(this)">
+                                            +
+                                        </button>
+                                    </li>
+                                    <li :title="item.lname">
+                                        {{item.lname}}
+                                    </li>
+                                    <li :title="item.meterId">
+                                        {{item.meterId}}
+                                    </li>
+                                    <li :title="item.install_address">
+                                        {{item.install_address}}
+                                    </li>
+                                    <li>{{item.type}}</li>
+                                    <li>{{item.countw}}</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <Page class="page-bar"
+                              :total="allRow"
+                              @on-change="getCurrentPage($event)"
+                              show-elevator show-total></Page>
+                    </div>
+                    <div class="main-content" v-show="whichTab==='relation'">
+                        <div class="btn-group chart-btns">
+                            <div>电表编号:
+                                <i-select class="code-select"
+                                          v-model="inputCode"
+                                          filterable clearable>
+                                    <i-option v-for="item of midArr"
+                                              :key="item.value"
+                                              :value="item.value">
+                                        {{item.value}}
+                                    </i-option>
+                                </i-select>
+                            </div>
+                            <i-button type="primary"
+                                      @click="">查询
+                            </i-button>
+                        </div>
+                        <div id="chart-wrapper" class="chart-wrapper"></div>
+                        <!--右键菜单-->
+                        <transition name="fade">
+                            <div class="ivu-poptip-popper right-menu"
+                                 id="right-menu" v-if="showRMenu"
+                                 x-placement="top"><!--箭头-->
+                                <div class="ivu-poptip-content">
+                                    <div class="ivu-poptip-arrow"></div>
+                                    <div class="ivu-poptip-inner">
+                                        <div class="ivu-poptip-body poptip-item">
+                                            <div class="ivu-poptip-body-content-inner">升级</div>
+                                            <div class="ivu-poptip-body-content-inner">添加子级</div>
+                                            <div class="ivu-poptip-body-content-inner">删除子级</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </transition>
+                    </div>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+</div>
+<script src="../../js/wastage_analyze.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script>
+  const HEADER = 'http://172.16.31.217:8030/meterforproperty/'
+
+  // 获取子电表数据
+  const getChildrenMeters = (dom) => {
+    let pId = dom.getAttribute('id')
+
+    let startDate = sessionStorage.getItem('wastageSTime')
+    let endDate = sessionStorage.getItem('wastageETime')
+
+    let thisText = dom.innerText
+    let thisUl = dom.parentNode.parentNode
+    // 当前行
+    if (thisText === '+') {
+      let self = this
+      axios({
+        url: HEADER + '/energyAnalysis/check_getMeterMessageData.do',
+        params: {
+          pid: pId,
+          beginDate: startDate,
+          endDate: endDate
+        }
+      })
+        .then(({data}) => {
+          if (data.data) {
+            let childMeters = data.data
+
+            for (let item of childMeters) {
+              for (let key in item) {
+                if (item[key] === null || item[key] === undefined) {
+                  item[key] = ''
+                }
+              }
+
+              let ul = document.createElement('ul')
+              ul.setAttribute('class', 'child-ul')
+              ul.innerHTML = `
+                  <li>
+                      <button class="fold-td" title="点击展开"
+                      id="${item.meterId}"
+                      onclick="getChildrenMeters(this)">
+                          +
+                      </button>
+                  </li>
+                  <li title="${item.lname}">
+                      ${item.lname}
+                  </li>
+                  <li title="${item.meterId}">
+                      ${item.meterId}
+                  </li>
+                  <li title="${item.install_address}">
+                      ${item.install_address}
+                  </li>
+                  <li>${item.type}</li>
+                  <li>${item.countw}</li>`
+              thisUl.appendChild(ul)
+            }
+            dom.innerText = '-'
+            dom.setAttribute('title', '点击折叠')
+
+            if (childMeters[0].level > 2) {
+              thisUl.style.marginBottom = childMeters.length * 25 + 'px'
+            }
+          }
+          else {
+            this.$Message.info('此电表下没有子电表!')
+          }
+        })
+    }
+    else {
+      dom.innerText = '+'
+      dom.setAttribute('title', '点击展开')
+      let lis = thisUl.querySelectorAll('.child-ul')
+      for (let item of lis) {
+        item.remove()
+      }
+      thisUl.style.marginBottom = 0
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+@logoAndSiderWidth: 260px;
+
+body {
+  min-width: 1366px;
+  background-color: #edeffc;
+}
+
+header {
+  height: 70px;
+  .layout-logo {
+    width: @logoAndSiderWidth;
+    height: 100%;
+    background: #2d8cf0;
+    float: left;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    .logo {
+      display: inline-block;
+      width: 70px;
+      height: 100%;
+      background: url("../img/logo.png") no-repeat 15px 4px;
+    }
+    .logo-name {
+      position: absolute;
+      height: 100%;
+      line-height: 80px;
+      color: #fff;
+      letter-spacing: 3px;
+    }
+  }
+  > .nav-ul {
+    display: flex;
+    justify-content: space-evenly;
+    height: 100%;
+    margin-left: 200px;
+    padding: 0 30px;
+    font-size: 16px;
+    > li {
+      min-width: 88px;
+      padding: 0 !important;
+      text-align: center;
+      font-size: 16px;
+      line-height: 85px !important;
+      &:hover {
+        > a {
+          color: #2d8cf0;
+        }
+        > div {
+          > a {
+            color: #2d8cf0;
+          }
+        }
+      }
+      a {
+        color: #495060;
+      }
+      ul {
+        li:hover {
+          a {
+            color: #2d8cf0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.ivu-layout-has-sider {
+  .meter-sider {
+    min-height: 688px;
+    max-width: @logoAndSiderWidth !important;
+    flex-basis: @logoAndSiderWidth !important;
+    background: #02093d;
+    color: #fff;
+    text-align: center;
+    font-size: 16px;
+    .user-info-bar {
+      border-bottom: 1px solid #495060;
+      padding-bottom: 39px;
+      .user-avatar {
+        width: 80px;
+        height: 80px;
+        margin: 40px auto 20px;
+        border-radius: 50%;
+        background-color: #fff;
+      }
+    }
+    .user-btn-group {
+      padding-top: 40px;
+      .user-config {
+        margin-bottom: 10px;
+        cursor: pointer;
+        &:hover {
+          color: #2d8cf0;
+        }
+      }
+      .pwd-config {
+        margin-bottom: 50px;
+        cursor: pointer;
+        &:hover {
+          color: #2d8cf0;
+        }
+      }
+    }
+    .quit-btn {
+      width: 120px;
+      color: #fff;
+      background-color: transparent;
+    }
+  }
+  .page-wrapper {
+    padding: 0 24px 0;
+    background-color: #edeffc;
+    .page-title {
+      margin: 20px 0;
+      .content-group {
+        > span {
+          cursor: pointer;
+        }
+        .unselected {
+          color: #999;
+          margin-right: 10px;
+          font-weight: normal;
+          &:hover {
+            color: #2d8cf0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.page-bar {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.tree-wrapper {
+  min-width: 260px;
+  max-width: 260px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 4px;
+  margin-right: 1px;
+  .search-area {
+    margin-bottom: 15px;
+  }
+  .area-tree {
+    max-height: 630px;
+    overflow-y: scroll;
+  }
+}
+
+[v-cloak] {
+  display: none !important;
+}
+
+ul {
+  list-style: none;
+}

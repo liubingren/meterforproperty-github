@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>能源管理平台-能源分析</title>
+</head>
+<body>
+<div id="electric-trend" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper">
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">用电趋势分析</breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title" v-cloak>
+                    <i></i>用电趋势分析
+                </div>
+                <div class="content-wrapper">
+                    <div class="tree-wrapper">
+                        <!--树形控件-->
+                        <vrg-tree @father-event="getSonData($event)"></vrg-tree>
+                    </div>
+                    <div class="main-content">
+                        <div class="btn-group">
+                            <div>年份:
+                                <date-picker @on-change="getDate($event)"
+                                             type="year"
+                                             :value="date"></date-picker>
+                            </div>
+                            <i-button data-type="year"
+                                      @click="getTimeType($event)">
+                                年视图
+                            </i-button>
+                            <i-button data-type="month"
+                                      @click="getTimeType($event)">
+                                月视图
+                            </i-button>
+                            <i-button type="primary"
+                                      @click="getChartData($event)">
+                                分析
+                            </i-button>
+                        </div>
+                        <div id="chart-wrapper"></div>
+                    </div>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+</div>
+<script src="../../js/electric_trend.js"></script>
+</body>
+</html>

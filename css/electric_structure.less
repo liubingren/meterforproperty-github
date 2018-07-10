@@ -1,0 +1,46 @@
+.content-title {
+  position: relative;
+  height: 80px;
+  line-height: 80px;
+  font-size: 16px;
+  font-weight: bold;
+  text-indent: 70px;
+  background-color: #fff;
+  border-radius: 4px;
+  margin-bottom: 1px;
+  i {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: 25px;
+    left: 35px;
+    background: url("../img/structure_icon.png") no-repeat;
+  }
+}
+
+.content-wrapper {
+  display: flex;
+  min-height: 625px;
+  background: #fff;
+  .main-content {
+    width: 100%;
+    margin-top: 20px;
+    .btn-group {
+      display: flex;
+      margin: 0 0 30px 30px;
+      line-height: 32px;
+      > div {
+        margin-right: 20px;
+      }
+      .time-type, .area-type {
+        width: 80px;
+      }
+      .selected-area {
+        width: 160px;
+      }
+    }
+    #chart-wrapper {
+      height: 660px;
+    }
+  }
+}
