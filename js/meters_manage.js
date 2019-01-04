@@ -1,6 +1,7 @@
 import {
   Vue, iView, axios,
-  HEADER, hidePage
+  HEADER, hidePage,
+  isShowBtn
 } from './general.js'
 import '../css/meters_manage.less'
 
@@ -15,6 +16,7 @@ let metersManageVM = new Vue({
     countMeters: [],   // 电表安装统计
     allMeters: 0,
     allRow: 0,    // 数据总条数
+    currentPage:1,
     lineStatusList: [
       {value: 1, label: '在线'},
       {value: 0, label: '离线'},
@@ -22,6 +24,7 @@ let metersManageVM = new Vue({
     ],
     lineStatus: ' ',
     codeOrAddr: '',
+    placeholder: '请输入电表编号/安装位置',
     exportUrl: 'javascript:void(0)',
     importUrl: HEADER + '/meter/import_importMeters.do',
 
@@ -38,17 +41,12 @@ let metersManageVM = new Vue({
     buildingNum: '',
     roomNum: '',
     modelLoading: true,
+    elecType: '',    // 用电类型
+    elecTypeArr:[],   // 用电类型下拉数组
+    peakLevelValleyProgramType: '',    // 峰平谷方案类型
+    peakLevelValleyProgramArr:[], //峰平谷方案列表下拉数组
     // 相位
-    phaseList: [
-      {value: 'A', label: 'A'},
-      {value: 'B', label: 'B'},
-      {value: 'C', label: 'C'}
-    ],
     selectedPhase: '',
-    deviceStatus: [
-      {value: 1, label: '使用'},
-      {value: 0, label: '停用'}
-    ],
     selectedStatus: '',
     // 预付费电表
     mkeys: '',
@@ -104,7 +102,7 @@ let metersManageVM = new Vue({
     },
     // 随时拼接模板下载 url
     modelUrl: function () {
-      return HEADER + '/meter/check_downImportMeterDemo.do?meter_type=' +
+      return HEADER + '/meter/templatedown_downImportMeterDemo.do?meter_type=' +
         this.tranType(this.meterType)
     }
   },
@@ -125,7 +123,7 @@ let metersManageVM = new Vue({
         let self = this
         axios({
           method: 'post',
-          url: HEADER + '/meter/update_bindMeterToGroup.do',
+          url: HEADER + '/meter/bindingmeter_bindMeterToGroup.do',
           params: {meterids: this.meterIdArr.join(',')}
         })
           .then(({data}) => {
@@ -149,7 +147,7 @@ let metersManageVM = new Vue({
     unBindMeters () {
       axios({
         method: 'post',
-        url: HEADER + '/meter/update_delBindMeterToGroup.do',
+        url: HEADER + '/meter/untiedmeter_delBindMeterToGroup.do',
         params: {
           meterids: this.meterIdArr.join(',')
         }
@@ -179,11 +177,12 @@ let metersManageVM = new Vue({
       formData.append('file', e.target.files[0])
       let url = ''
       if (isUpdate) {   // 批量更新
-        url = HEADER + '/meter/import_importUpateMeters.do'
+        url = HEADER + '/meter/importupdate_importUpateMeters.do'
       }
       else {
         url = HEADER + '/meter/import_importMeters.do'
       }
+      console.log('lllllllll')
       axios.post(
         url,
         formData)
@@ -192,16 +191,18 @@ let metersManageVM = new Vue({
             this.$Modal.success({
               content: data.msg
             })
+            this.loadMeters(this.location_id)
           }
           else {
             this.$Modal.error({
               content: data.msg
             })
           }
+          e.target.value=''
         })
     },
 
-    // 转换电表类型
+    // 将字符串表达的电表类型转换成后台接收的参数
     tranType (meter_type) {
       {
         if (meter_type === 'publicMeter') {
@@ -213,6 +214,9 @@ let metersManageVM = new Vue({
         else if (meter_type === 'prePayMeter') {
           meter_type = 3
         }
+        else if (meter_type === 'AGMeter') {
+          meter_type = 4
+        }
       }
       return meter_type
     },
@@ -221,8 +225,11 @@ let metersManageVM = new Vue({
     exportMeters () {
       if (this.location_id) {
         this.exportUrl =
-          HEADER + '/meter/export_exportMeter.do?meter_type=' +
-          this.tranType(this.meterType) + '&location_id=' + this.location_id
+          HEADER + '/meter/export_exportMeter.do?' +
+          'meter_type=' + this.tranType(this.meterType) +
+          '&location_id=' + this.location_id +
+          '&params=' + this.codeOrAddr +
+          '&online_status=' + this.lineStatus
       }
       else {
         this.$Modal.warning({
@@ -259,8 +266,8 @@ let metersManageVM = new Vue({
           this.readMids = []
         }
       }
-      this.exportReadData()
     },
+
     // 获取抄表数据, 打开抄表弹窗
     getReadData (isMonth) {
       let self = this
@@ -270,11 +277,14 @@ let metersManageVM = new Vue({
         let url = ''
 
         if (isMonth) {   // 月度抄表
-          url = HEADER + '/meter/check_countMeterMonthlyReading.do'
+          url = HEADER + '/meter/monthrm_countMeterMonthlyReading.do'
         }
         else {
-          url = HEADER + '/meter/check_countMeterNowReading.do'
+          url = HEADER + '/meter/nowrm_countMeterNowReading.do'
         }
+
+        // 拼接导出链接
+        this.exportReadData()
 
         axios({
           url: url,
@@ -288,7 +298,7 @@ let metersManageVM = new Vue({
               self.lastMonth = data.data.lastmonth.substr(0)
             }
             else {
-              self.readMeters = data.data
+              self.readMeters = data.data.list
             }
 
             let currentLoc = sessionStorage.getItem('currentLoc')
@@ -304,8 +314,13 @@ let metersManageVM = new Vue({
     },
     // 拼接导出抄表数据链接
     exportReadData () {
-      this.exportRUrl = HEADER +
-        '/meter/export_exportMeterNowReading.do?mids=' + this.readMids.join()
+      if (this.isMonth) {
+        this.exportRUrl = HEADER +
+          '/meter/export_exportMeterMonthlyReading.do?mids=' + this.readMids.join()
+      } else {
+        this.exportRUrl = HEADER +
+          '/meter/export_exportMeterNowReading.do?mids=' + this.readMids.join()
+      }
     },
 
     // 获取树形图子组件数据
@@ -319,6 +334,16 @@ let metersManageVM = new Vue({
     loadMeters (lid, page, lStatus, codeAddr) {
       let self = this
       let meter_type
+
+      // 拼接导出链接
+      if (lStatus) {
+        this.exportMeters()
+      }
+      if (codeAddr) {
+        codeAddr = codeAddr.trim()
+        this.exportMeters()
+      }
+
       // 电表安装统计数据
       if (self.meterType === 'metersStatistics') {
         axios({
@@ -338,7 +363,7 @@ let metersManageVM = new Vue({
           params: {
             meter_type: meter_type,
             location_id: lid,
-            page: page,
+            page: page||this.currentPage,
             online_status: lStatus,
             params: codeAddr
           }
@@ -347,26 +372,50 @@ let metersManageVM = new Vue({
             if (data.data) {
               self.metersArr = data.data.list
               self.allMeters = data.data.allRow
+              this.currentPage=data.data.currentPage
               hidePage(data.data.allRow)
               self.allRow = data.data.allRow
             }
           })
       }
+
+      // 根据权限隐藏或显示按钮
+      setTimeout(() => {
+        isShowBtn()
+      }, 300)
     },
 
     // 分页
     getCurrentPage (e) {
       this.loadMeters(this.location_id, e)
-
+      this.currentPage=e
       this.checkStatus = []
       this.meterIdArr = []
       this.readMids = []
     },
 
+    // 切换电表类型 tab，并显示相应的页面内容
     toggleMeterType (e) {
       this.meterType = e.target.getAttribute('data-type')
       this.loadMeters(this.location_id)
       sessionStorage.setItem('mType', this.meterType)
+      this.exportMeters()     // 拼接导出链接
+      // 清空勾选项
+      this.checkStatus = []
+      this.meterIdArr = []
+      this.readMids = []
+      this.codeOrAddr = ''
+      switch (this.meterType) {
+        case 'publicMeter':
+          this.placeholder = '请输入电表编号/安装位置'
+          break
+        case 'userMeter'||'AGMeter':
+          this.placeholder = '请输入电表编号/楼栋号/房号'
+          break
+        case 'prePayMeter':
+          this.placeholder = '请输入电表编号/用户名称/用户编号'
+          break
+      }
     },
 
     // 打开添加电表弹窗
@@ -390,19 +439,40 @@ let metersManageVM = new Vue({
           this.electricPrice = ''
           this.installAddr = ''
           this.selectedPhase = ''
-          this.selectedStatus = ''
+          this.selectedStatus = undefined
+          this.buildingNum = ''
+          this.roomNum = ''
+          this.mkeys = ''
+          this.usercode = ''
+          this.username = ''
+          this.phonenumber = ''
+          this.ratio = ''
+          this.elecType = ''
+          this.peakLevelValleyProgramType = ''
+          this.meterLon=''
+          this.meterLat=''
+        }
+        switch (this.meterType) {
+          case 'userMeter':
+            this.elecType = '居民住宅'
+            break
+          case 'prePayMeter':
+            this.elecType = '商铺'
+            break
         }
       }
     },
     // 打开编辑电表弹窗
     openEditModal (rId, code, reading, initValue, price, installAddr,
-                   phase, type, status, building, room_number) {
-      this.meterModal = true
-      this.isAddModal = false
-      this.inputError = true
-      this.getAddrLng()
+                   phase, type, status, building, room_number,
+                   mkeys, usercode, username, phonenumber, ratio, use_electricity_type_id,plv_id) {
       this.recordId = rId
       // 显示原本的值
+      if (status === '启用') {
+        this.selectedStatus = '1'
+      } else {
+        this.selectedStatus = '0'
+      }
       {
         this.meterCode = code
         this.meterReading = reading
@@ -410,10 +480,17 @@ let metersManageVM = new Vue({
         this.electricPrice = price
         this.installAddr = installAddr
         this.selectedPhase = phase
-        this.selectedStatus = status
         this.buildingNum = building
         this.roomNum = room_number
+        this.mkeys = mkeys
+        this.usercode = usercode
+        this.username = username
+        this.phonenumber = phonenumber
+        this.ratio = ratio
+        this.elecType = use_electricity_type_id
+        this.peakLevelValleyProgramType = plv_id
       }
+      this.getAddrLng('edit')
     },
     // 数字校验
     isNum (val) {
@@ -437,11 +514,11 @@ let metersManageVM = new Vue({
       }
     },
     // 显示地址, 查询并输入经纬度
-    getAddrLng () {
+    getAddrLng (type) {
       // 显示当前地址
       this.currentAddr = sessionStorage.getItem('currentLoc')
       let re = / /g
-      let cAddrStr = this.currentAddr.replace(re, '')
+      let cAddrStr = this.currentAddr.replace(re, '')+this.installAddr
       let self = this
       axios({
         url: HEADER + '/location/check_getAddressLatLon.do',
@@ -452,12 +529,18 @@ let metersManageVM = new Vue({
       })
         .then(({data}) => {
           if (data.data) {
-            let resData = data.data
+            let resData = JSON.parse(data.data)
             self.meterLon = resData.lng
             self.meterLat = resData.lat
+            if(type==='edit'){
+              this.meterModal = true
+              this.isAddModal = false
+              this.inputError = true
+            }
           }
         })
     },
+
     // 提交添加/编辑的电表信息
     submitMeter () {
       let self = this
@@ -483,10 +566,12 @@ let metersManageVM = new Vue({
               phase: self.selectedPhase,
               price: self.electricPrice,
               initval: self.initValue,
-              phonenumber: self.phoneNumber,
-              status: self.selectedStatus,
+              phonenumber: self.phonenumber,
+              status: parseInt(self.selectedStatus),
               longitude: self.meterLon,
-              latitude: self.meterLat
+              latitude: self.meterLat,
+              use_electricity_type_id: self.elecType,
+              plv_id: self.peakLevelValleyProgramType
             }
           })
             .then(({data}) => {
@@ -543,10 +628,12 @@ let metersManageVM = new Vue({
               phase: self.selectedPhase,
               price: self.electricPrice,
               initval: self.initValue,
-              phonenumber: self.phoneNumber,
-              status: self.selectedStatus,
+              phonenumber: self.phonenumber,
+              status: parseInt(self.selectedStatus),
               longitude: self.meterLon,
-              latitude: self.meterLat
+              latitude: self.meterLat,
+              use_electricity_type_id: self.elecType,
+              plv_id: self.peakLevelValleyProgramType
             }
           })
             .then(({data}) => {
@@ -613,12 +700,33 @@ let metersManageVM = new Vue({
     }
   },
   mounted () {
+    // 隐藏分页
     hidePage(this.allRow)
+
     let uId = sessionStorage.getItem('unitId')
-    this.meterType = sessionStorage.getItem('mType')
+    let mt = sessionStorage.getItem('mType')
+    if (mt) {
+      this.meterType = mt
+    }
     if (uId) {
       this.location_id = uId
       this.loadMeters(uId)
+      this.exportMeters()
     }
+    axios.get(HEADER+'meter/check_getUseElectricityTypeList.do')
+    .then((response) => {
+        this.elecTypeArr=response.data.data
+    })
+    .catch(function (error) {
+        console.log(error)
+    });
+
+    axios.get(HEADER+'meter/check_getPeakLevelValleyProgramList.do')
+    .then((response) => {
+        this.peakLevelValleyProgramArr=response.data.data
+    })
+    .catch(function (error) {
+        console.log(error)
+    });
   }
 })

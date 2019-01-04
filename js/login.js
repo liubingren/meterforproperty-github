@@ -14,6 +14,7 @@ let loginVm = new Vue({
   },
   mounted(){
     this.createCode()
+    sessionStorage.clear()
   },
   methods:{
     //验证码
@@ -81,7 +82,7 @@ let loginVm = new Vue({
              THIS.showmag('false','用户名或密码错误！')
            }else if(res.data.code === 1){
              THIS.showmag('true','登录成功！')
-             localStorage.setItem('userName',THIS.userInfor.userName)
+             sessionStorage.setItem('userName',THIS.userInfor.userName)
              window.location.href = './large_screen.html'
            }
           })

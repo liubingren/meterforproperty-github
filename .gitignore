@@ -1,9 +1,11 @@
 # Created by .ignore support plugin (hsz.mobi)
 
 .cache
+.idea
+.vscode
 dist
 node_modules
-.idea
 Swagger
 WEB-INF
+.map
 package-lock.json

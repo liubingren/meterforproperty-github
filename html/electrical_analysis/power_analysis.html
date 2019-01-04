@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../../img/bt_logo.png">
+    <title>智慧能源管理平台-功率分析</title>
+</head>
+<body>
+<div id="electric_analysis" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper" v-cloak>
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">用电分析</breadcrumb-item>
+                <breadcrumb-item type="primary">功率分析</breadcrumb-item>
+                <breadcrumb-item type="primary">
+                    <span class="content-group">
+                        <span :class="{unselected:timeType!=='realTime'}" style="margin-right:10px"
+                        data-type="realTime" data-typeid="3" @click="toggleTimeType($event)">实时</span>
+                        <span :class="{unselected:timeType!=='day'}" style="margin-right:10px"
+                              data-type="day" data-typeid="1" @click="toggleTimeType($event)">日</span>
+                        <span :class="{unselected:timeType!=='month'}"
+                              data-type="month" data-typeid="2" @click="toggleTimeType($event)">月</span>
+                    </span>
+                </breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title">
+                    <i class="analysis-icon"></i>功率分析
+                </div>
+                <div class="content-wrapper">
+                    <!--dom树-->
+                    <div class="tree-wrapper">
+                            <!--树形控件-->
+                            <vrg-tree @father-event="getSonData($event)"></vrg-tree>
+                    </div>
+                    <!--表格-->
+                    <div class="main-content">
+                        <div class="select-group">
+                            <label>产品类型：</label>
+                            <i-select size="large" placeholder="请选择产品类型" v-model="productType_selected" @on-change="getProductTypeSelectVal($event)" style="width:150px;margin-right: 15px;margin-bottom: 10px;">
+                                <i-option v-for="item in productType" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+                            </i-select>
+                            <label>用电类型：</label>
+                            <i-select size="large" placeholder="请选择用电类型" v-model="electricity_use_selected" @on-change="getElectricTypeSelectVal($event)" style="width:150px;margin-right: 15px;margin-bottom: 10px;">
+                                <i-option v-for="item in electricityUseType" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+                            </i-select>
+                            <label>电表编号：</label>
+                            <i-select size="large"  placeholder="请选择电表编号" :clearable="true" v-model="meter_number_selected" filterable ref="selectNumber" style="width:220px;margin-right: 15px;margin-bottom: 10px;"> 
+                                <i-option v-for="item in meterNumberType" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+                            </i-select>
+                            <label>时间：</label>
+                            <date-picker size="large" :type="datetimeType"
+                                        :value="selectTime"  placeholder="请选择时间"
+                                        style="width:150px;margin-right: 10px;margin-bottom: 10px;" @on-change="handleChange($event)">
+                            </date-picker>
+                            <i-button type="primary" @click="getAnalysisData()">查询</i-button>
+                        </div>
+                        <div id="showEchart" class="showEchart"></div>
+                        <table class="messageList" v-if="showTable">
+                            <tbody>
+                                <tr>
+                                    <th>最大功率</th>
+                                    <td>{{ listInfor.maxPower !== undefined ? (listInfor.maxPower + 'kW') : '暂无数据' }}</td>
+                                    <th>发生时间</th>
+                                    <td>{{ listInfor.maxDayTime !== undefined ? listInfor.maxTime : '暂无数据'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>最小功率</th>
+                                    <td>{{ listInfor.minPower !== undefined ? (listInfor.minPower + 'kW') : '暂无数据' }}</td>
+                                    <th>发生时间</th>
+                                    <td>{{ listInfor.minDayTime !== undefined ? listInfor.minTime : '暂无数据'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>平均功率</th>
+                                    <td>{{ listInfor.avgPower !== undefined ? (listInfor.avgPower + 'kW') : '暂无数据' }}</td>
+                                    <th>峰谷差</th>
+                                    <td>{{ listInfor.peakValleyDifference !== undefined ? (listInfor.peakValleyDifference + 'kW') : '暂无数据' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>峰谷差率</th>
+                                    <td>{{ listInfor.peakValleyDifferenceRate !== undefined ? (listInfor.peakValleyDifferenceRate + '%') : '暂无数据' }}</td>
+                                    <th>功率比</th>
+                                    <td>{{ listInfor.powerRatio !== undefined ? (listInfor.powerRatio + '%') : '暂无数据' }}</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <p class="explain"  v-if="showTable">
+                            <span>峰谷差：</span>最大功率与最小功率之差；
+                            <span>峰谷差率：</span>峰谷差与最大功率的比率；
+                            <span>功率比：</span>平均功率与最大功率之比的百分数。
+                        </p>
+                        <table v-if="tableShow">
+                            <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th class="item-unit">
+                                        最大功率
+                                        <span>(kWh)</span>
+                                    </th>
+                                    <th class="item-unit">
+                                        最小功率
+                                        <span>(kWh)</span>
+                                    </th>
+                                    <th class="item-unit">
+                                        平均功率
+                                        <span>(kWh)</span>
+                                    </th>
+                                    <th class="item-unit">
+                                        峰谷差
+                                        <span>(kWh)</span>
+                                    </th>
+                                    <th class="item-unit">
+                                        功率比
+                                        <span>(%)</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in formList">
+                                    <td>{{ item.datetime }}</td>
+                                    <td>{{ item.maxPower }}</td>
+                                    <td>{{ item.minPower }}</td>
+                                    <td>{{ item.avgPower }}</td>
+                                    <td>{{ item.peakValleyDifference }}</td>
+                                    <td>{{ item.powerRatio }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <Page  v-if="tableShow" class="page-bar" id="page-bar" :total="totalPage" :current.sync="pageCurrent" @on-change="pageInfor($event)"
+                              show-elevator show-total></Page>
+                    </div>
+                </div>
+            </i-content>
+        </layout>
+    </layout> 
+</div>
+<script src="../../js/power_analysis.js"></script>
+</body>
+</html>

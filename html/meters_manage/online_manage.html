@@ -1,99 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../../img/bt_logo.png">
     <title>智慧能源管理平台-电表管理</title>
 </head>
-<body>
-<div id="online-manage" class="page-rout" v-cloak>
-    <meter-header></meter-header>
-    <layout class="ivu-layout-has-sider">
-        <meter-sider></meter-sider>
-        <layout class="page-wrapper">
-            <breadcrumb class="page-title">
-                <breadcrumb-item type="primary">电表在线管理</breadcrumb-item>
-            </breadcrumb>
-            <i-content class="page-body">
-                <!--判断显示内容标题-->
-                <div class="content-title" v-cloak>
-                    <i class="public-icon"></i>
-                    电表在线管理
-                </div>
-                <div class="content-wrapper">
-                    <div class="tree-wrapper">
-                        <!--树形控件-->
-                        <vrg-tree @father-event="getSonData($event)"></vrg-tree>
-                    </div>
-                    <div class="main-content">
-                        <div class="btn-group">
-                            <i-select class="select-meters"
-                                      v-model="lStatus"
-                                      @on-change="getLineStatus(lStatus)">
-                                <i-option v-for="item of lineStatusList"
-                                          :value="item.value" :key="item.value">
-                                    {{item.label}}
-                                </i-option>
-                            </i-select>
-                            <i-input class="search-meters"
-                                     v-model="searchParams"
-                                     placeholder="请输入电表编号/安装位置">
-                                <i-button slot="append"
-                                          icon="ios-search"
-                                          @click="getSearchParams(searchParams)">
-                                </i-button>
-                            </i-input>
-                            <div class="status-counts">
-                                在线(个): <span>{{onlineCounts}}</span>
-                                离线(个): <span>{{offlineCounts}}</span>
-                            </div>
-                        </div>
-                        <table>
-                            <thead v-cloak>
-                            <tr>
-                                <th>小区名称</th>
-                                <th>电表编号</th>
-                                <th>安装位置</th>
-                                <th>楼栋号</th>
-                                <th>房号</th>
-                                <th>连接SSID</th>
-                                <th>连接密码</th>
-                                <th>固件版本号</th>
-                                <th>设备状态</th>
-                                <th>最后通讯时间</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(item,index) of meters" :key="item.mid">
-                                <td>{{item.location_name}}</td>
-                                <td>{{item.mid}}</td>
-                                <td>{{item.install_address}}</td>
-                                <td>{{item.building}}</td>
-                                <td>{{item.room_number}}</td>
-                                <td>{{item.ssid}}</td>
-                                <td>{{item.pasd}}</td>
-                                <td>{{item.version}}</td>
-                                <td>{{item.online_status}}</td>
-                                <td :id="'td'+index">
-                                    <i-button type="primary" :id="'btn'+index"
-                                              @click="getLastTime(item.mid,index)"
-                                              v-if="item.online_status==='离线'">
-                                        获取
-                                    </i-button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <Page class="page-bar"
-                              :total="allRow"
-                              @on-change="getCurrentPage($event)"
-                              show-elevator show-total></Page>
-                    </div>
-                </div>
-            </i-content>
-        </layout>
-    </layout>
-</div>
 
-<script src="../../js/online_manage.js"></script>
+<body>
+    <div id="online-manage" class="page-rout" v-cloak>
+        <meter-header></meter-header>
+        <layout class="ivu-layout-has-sider">
+            <meter-sider></meter-sider>
+            <layout class="page-wrapper">
+                <breadcrumb class="page-title">
+                    <breadcrumb-item type="primary">电表在线管理</breadcrumb-item>
+                </breadcrumb>
+                <i-content class="page-body">
+                    <!--判断显示内容标题-->
+                    <div class="content-title" v-cloak>
+                        <i class="public-icon"></i>
+                        电表在线管理
+                    </div>
+                    <div class="content-wrapper">
+                        <div class="tree-wrapper">
+                            <!--树形控件-->
+                            <vrg-tree @father-event="getSonData($event)"></vrg-tree>
+                        </div>
+                        <div class="main-content">
+                            <div class="btn-group">
+                                <i-select class="select-meters" v-model="lStatus" @on-change="getLineStatus(lStatus)">
+                                    <i-option value="1">在线</i-option>
+                                    <i-option value="0">离线</i-option>
+                                    <i-option value=" ">全部</i-option>
+                                </i-select>
+                                <i-input class="search-meters onLineMeter-check" v-model="searchParams"
+                                    placeholder="请输入电表编号/安装位置">
+                                    <i-button slot="append" icon="ios-search" @click="getSearchParams(searchParams)">
+                                    </i-button>
+                                </i-input>
+                                <div class="status-counts">
+                                    在线(个):
+                                    <span>{{onlineCounts}}</span>
+                                    离线(个):
+                                    <span>{{offlineCounts}}</span>
+                                </div>
+                            </div>
+                            <table>
+                                <thead v-cloak>
+                                    <tr>
+                                        <th>小区名称</th>
+                                        <th>电表编号</th>
+                                        <th>安装位置</th>
+                                        <th>楼栋号</th>
+                                        <th>房号</th>
+                                        <th>连接SSID</th>
+                                        <th>连接密码</th>
+                                        <th>固件版本号</th>
+                                        <th>设备状态</th>
+                                        <th>最后通讯时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item,index) of meters" :key="item.mid">
+                                        <td>{{item.location_name}}</td>
+                                        <td>{{item.mid}}</td>
+                                        <td>{{item.install_address}}</td>
+                                        <td>{{item.building}}</td>
+                                        <td>{{item.room_number}}</td>
+                                        <td>{{item.ssid}}</td>
+                                        <td>{{item.pasd}}</td>
+                                        <td>{{item.version}}</td>
+                                        <td>{{item.online_status}}</td>
+                                        <td :id="'td'+index">
+                                            <i-button type="primary" :id="'btn'+index" @click="getLastTime(item.mid,index)"
+                                                v-if="item.online_status==='离线'">
+                                                获取
+                                            </i-button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <Page class="page-bar" :total="allRow" @on-change="getCurrentPage($event)"
+                                show-elevator show-total></Page>
+                        </div>
+                    </div>
+                </i-content>
+            </layout>
+        </layout>
+    </div>
+
+    <script src="../../js/online_manage.js"></script>
 </body>
+
 </html>

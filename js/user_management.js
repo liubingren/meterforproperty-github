@@ -1,4 +1,4 @@
-import { Vue, HEADER, axios, hidePage } from './general.js'
+import { Vue, HEADER, axios, hidePage, isShowBtn } from './general.js'
 import '../css/user_management.less'
 
 let edVM = new Vue({
@@ -29,7 +29,7 @@ let edVM = new Vue({
     companyName:'',
     companyAddr:'',
     //模板下载
-    downUrl:HEADER + 'user/check_downImportUserDemo.do',
+    downUrl:HEADER + 'user/templatedown_downImportUserDemo.do',
     file: null,
     importUrl: 'user/import_importUser.do',
     //总条数
@@ -65,6 +65,9 @@ let edVM = new Vue({
         THIS.list = response.data.list
         THIS.totalpage = response.data.allRow
         hidePage(THIS.totalpage)
+        setTimeout(() =>{
+          isShowBtn()
+       },100)
       })
     },
     //获取用户角色
@@ -101,7 +104,7 @@ let edVM = new Vue({
       this.importModal = false
       this.pwd = '******'
       //获取对应信息
-      this.id = e.target.parentNode.getAttribute('data-id')
+      this.id = this.selectedlist.id
       this.userName = this.selectedlist.username
       this.fullName = this.selectedlist.name
       this.sex = this.selectedlist.sex
@@ -239,7 +242,7 @@ let edVM = new Vue({
               }else{
                 THIS.instance('error', response.data.msg)
               }
-              THIS.loading = true
+              THIS.banSureBut()
               THIS.userModal = false
           }) 
         }
@@ -354,7 +357,6 @@ let edVM = new Vue({
             }else{
               THIS.instance('error', response.data.msg)
             }
-            //THIS.loading = false
             THIS.userModal = false 
           })
         }
@@ -375,12 +377,12 @@ let edVM = new Vue({
               THIS.instance('error', res.data.msg)
             }
             THIS.file = null
-            THIS.loading = false
+            THIS.banSureBut()
             THIS.userModal = false
           })
         }else{
           this.$Message.warning('请选择上传文件！')
-          THIS.loading = false
+          THIS.banSureBut()
         }
       }
     },
@@ -436,6 +438,8 @@ let edVM = new Vue({
           break
       }
     },
+  
+  
     //禁止对话框’确定‘后关闭
     banSureBut(){
        setTimeout(() => {

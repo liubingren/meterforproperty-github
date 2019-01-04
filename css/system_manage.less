@@ -1,0 +1,315 @@
+@rpmBorder: 1px solid #dddee1;
+@perLeft: 20px; // 每个权限项目的左边距
+
+.content-title {
+  position: relative;
+  height: 80px;
+  line-height: 80px;
+  font-size: 16px;
+  font-weight: bold;
+  text-indent: 70px;
+  background-color: #fff;
+  border-radius: 4px;
+  margin-bottom: 1px;
+  i {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: 25px;
+    left: 35px;
+    &.role-icon {
+      background: url("../img/role_icon.png") no-repeat;
+    }
+    &.per-icon {
+      background: url("../img/permission_icon.png") no-repeat;
+    }
+    &.res-icon {
+      background: url("../img/res_icon.png") no-repeat;
+    }
+    &.role-per-icon {
+      background: url("../img/role_per_icon.png") no-repeat;
+    }
+  }
+}
+
+.content-wrapper {
+  display: flex;
+  min-height: 622px;
+}
+
+.tree-wrapper {
+  min-width: 260px;
+  max-width: 260px;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 4px;
+  margin-right: 1px;
+  .search-area {
+    margin-bottom: 25px;
+    input {
+      height: 38px;
+    }
+  }
+}
+
+.main-content {
+  width: 100%;
+  background-color: #fff;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.btn-group {
+  position: relative;
+  display: flex;
+  margin-top: 30px;
+  margin-left: 5%;
+  .select-meters {
+    min-width: 100px;
+    margin-right: 20px;
+    width: 100px;
+    font-size: 14px;
+  }
+  .search-meters {
+    width: 200px;
+    margin-bottom: 30px;
+  }
+  .status-counts {
+    position: absolute;
+    right: 5%;
+    bottom: 3px;
+    color: #80848f;
+    font-weight: bold;
+    span {
+      font-size: 16px;
+      color: #000;
+    }
+  }
+}
+
+table {
+  margin: 30px auto;
+  width: 90%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  text-align: center;
+  thead {
+    background-color: #dfeffe;
+    font-size: 16px;
+    tr {
+      height: 50px;
+      th {
+        &:first-of-type {
+          padding-left: 10px;
+        }
+        &:last-of-type {
+          position: relative;
+          width: 50px;
+          .add-meter {
+            margin-top: 5px;
+            color: #2d8cf0;
+            font-size: 20px;
+            cursor: pointer;
+          }
+        }
+        &.price-unit {
+          position: relative;
+          span {
+            position: absolute;
+            width: 40px;
+            font-size: 12px;
+            color: #80848f;
+            bottom: 0;
+            right: 50%;
+            -webkit-transform: translateX(50%);
+            -moz-transform: translateX(50%);
+            -ms-transform: translateX(50%);
+            -o-transform: translateX(50%);
+            transform: translateX(50%);
+          }
+        }
+      }
+    }
+  }
+  tbody {
+    font-size: 14px;
+    tr {
+      height: 40px;
+      &:nth-of-type(2n) {
+        background: #f9f9fb;
+      }
+      td:not(.operation-td) {
+        max-width: 70px;
+        overflow: hidden;
+        white-space: nowrap;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        &:first-of-type {
+          padding-left: 10px;
+        }
+      }
+    }
+  }
+}
+
+.rpm-wrapper {
+  .select-wrapper {
+    margin: 20px 0 20px 15%;
+    .select-role {
+      display: inline-block;
+      width: 150px;
+    }
+  }
+  .rpm-card {
+    position: relative;
+    margin: 0 auto;
+    width: 70%;
+    min-width: 948px;
+    height: 700px;
+    .card-title {
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      color: #fff;
+      font-size: 18px;
+      background-color: #2d8cf0;
+    }
+    .card-body {
+      height: 600px;
+      overflow-y: scroll;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      border: @rpmBorder;
+      li:last-of-type {
+        border-bottom: none;
+      }
+      > li {
+        position: relative;
+        width: 100%;
+        padding-left: 1%;
+        border-bottom: @rpmBorder;
+        &.meter-manage-list { // 电表管理那坑货
+          height: 164px;
+        }
+        > label {
+          line-height: 97px;
+          font-size: 18px;
+        }
+        > ul {
+          position: absolute;
+          height: 100%;
+          width: 85%;
+          top: 0;
+          left: 0;
+          border-left: @rpmBorder;
+          margin-left: 15%;
+          > li {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            padding-left: 20px;
+            border-bottom: @rpmBorder;
+            &.two-children {
+              height: 50%;
+              .rp-list {
+                padding-top: 16px;
+              }
+            }
+            &.three-children {
+              height: 33%;
+              .rp-list {
+                padding-top: 7px;
+              }
+            }
+            .rp-list {
+              position: absolute;
+              display: flex;
+              flex-wrap: wrap;
+              height: 100%;
+              margin-left: 200px;
+              border-left: @rpmBorder;
+              li {
+                margin-left: @perLeft;
+              }
+            }
+          }
+        }
+        .first-rpl {
+          display: flex;
+          padding-left: 220px;
+          li {
+            border: none;
+            padding-left: @perLeft;
+            &:first-of-type {
+              border-left: @rpmBorder;
+            }
+          }
+        }
+      }
+    }
+    .submit-per {
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      -webkit-transform: translateX(-50%);
+      -moz-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+      -o-transform: translateX(-50%);
+      transform: translateX(-50%);
+    }
+  }
+}
+
+// 弹窗样式
+.role-modal {
+  div {
+    font-size: 14px;
+  }
+  .modal-header {
+    font-size: 16px;
+  }
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 58%;
+    margin: 15px auto;
+    line-height: 32px;
+    > div {
+      width: 200px;
+      .electric-price, .init-price {
+        width: 160px;
+      }
+    }
+    .current-unit {
+      width: 200px;
+      background-color: #bbbec4;
+      border-radius: 4px;
+      text-indent: 10px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    span {
+      position: absolute;
+      left: -7px;
+      color: #ed3f14;
+    }
+    .per-name {
+      span {
+        color: #000;
+        margin-left: 7px;
+      }
+    }
+  }
+  .code-wrapper {
+    position: relative;
+    .meter-code {
+      position: absolute;
+      left: 100px;
+    }
+  }
+}

@@ -1,13 +1,14 @@
 import { Vue, HEADER, axios } from './general.js'
 import '../css/abnormal_orders.less'
 
+
 /* 
  * 删除数组中指定值 
  */
-Array.prototype.remove = function(value) {
+Array.prototype.remove = function (value) {
 	var len = this.length;
-	for(var i = 0, n = 0; i < len; i++) { //把出了要删除的元素赋值给新数组 
-		if(this[i] != value) {
+	for (var i = 0, n = 0; i < len; i++) { //把出了要删除的元素赋值给新数组 
+		if (this[i] != value) {
 			this[n++] = this[i];
 		}
 	}
@@ -16,7 +17,7 @@ Array.prototype.remove = function(value) {
 
 let VM = new Vue({
 	el: '#recharge_Orders',
-	data: function() {
+	data: function () {
 		return {
 			meterModal: false,
 			isAddModal: true,
@@ -34,6 +35,11 @@ let VM = new Vue({
 			pagesize: 10,
 			allRow: 0,
 			currentPage: 1,
+			/*
+			 判断按钮权限(导出,更改了已处理)
+			 * */
+			exportIsShow: false,
+			markIsShow: false,
 			publicOrdersTableData: [], //表格数据
 			modal1: false,
 			modal2: false,
@@ -56,48 +62,66 @@ let VM = new Vue({
 				title: 'parent 1',
 				expand: true,
 				children: [{
-						title: 'parent 1-1',
-						expand: true,
-						children: [{
-								title: 'leaf 1-1-1'
-							},
-							{
-								title: 'leaf 1-1-2'
-							}
-						]
+					title: 'parent 1-1',
+					expand: true,
+					children: [{
+						title: 'leaf 1-1-1'
 					},
 					{
-						title: 'parent 1-2',
-						expand: true,
-						children: [{
-								title: 'leaf 1-2-1'
-							},
-							{
-								title: 'leaf 1-2-1'
-							}
-						]
+						title: 'leaf 1-1-2'
 					}
+					]
+				},
+				{
+					title: 'parent 1-2',
+					expand: true,
+					children: [{
+						title: 'leaf 1-2-1'
+					},
+					{
+						title: 'leaf 1-2-1'
+					}
+					]
+				}
 				]
 			}]
 		}
 	},
 	mounted() {
+		let THIS = this;
+		axios({
+			url: HEADER + '/permission/check_getCurrentUserPermission.do'
+		})
+			.then(({
+				data
+			}) => {
+				console.log(data);
+				for (let item of data.data) {
+					if ('abnormalMeterOrders-export' == item) {
+						THIS.exportIsShow = true;
+					}
+					if ('abnormalMeterOrders-mark' == item) {
+						THIS.markIsShow = true;
+					}
+				}
+			})
 		this.search(); //初始化表格
 		this.getUnresolveNumber();
+		
 	},
 	methods: {
 		getUnresolveNumber() { //未处理个数
 			let THIS = this;
 			axios({
-					method: 'get',
-					url: HEADER + '/abnormalMeterOrders/check_countAbnormalMeterOrders.do'
-				})
-				.then(function(response) {
-					if(response.data.code == 1) {
+				method: 'get',
+				url: HEADER + '/abnormalMeterOrders/check_countAbnormalMeterOrders.do'
+			})
+				.then(function (response) {
+					if (response.data.code == 1) {
 						THIS.unresolveNumber = response.data.data.counts;
 					}
 				})
-				.catch(function(error) {
+				.catch(function (error) {
 
 				});
 		},
@@ -106,28 +130,28 @@ let VM = new Vue({
 		},
 		chooseData(index) { //多选
 			//			选中立即把对应索引push进数组中,否则就删除
-			if(this.publicOrdersTableData[index].state == true) {
+			if (this.publicOrdersTableData[index].state == true) {
 				this.chosenDataIndex.push(index);
 				this.chosenDataIndex = Array.from(new Set(this.chosenDataIndex)); //去重
 			} else {
 				this.chosenDataIndex.remove(index);
 			}
 			//不是所有数据都选上时去掉全选
-			if(this.chosenDataIndex.length != this.publicOrdersTableData.length) {
+			if (this.chosenDataIndex.length != this.publicOrdersTableData.length) {
 				this.chooseAllCheckboxFlag = false;
 			}
 		},
 		chooseDataAll() { //			全选	
 			this.chosenDataIndex = []; //清空数据索引数组
-			if(this.chooseAllCheckboxFlag == true) { //把所有的checkbox勾选上
-				for(let i = 0; i < this.publicOrdersTableData.length; i++) {
-					if(this.publicOrdersTableData[i]['order_status'] == "未处理") {
+			if (this.chooseAllCheckboxFlag == true) { //把所有的checkbox勾选上
+				for (let i = 0; i < this.publicOrdersTableData.length; i++) {
+					if (this.publicOrdersTableData[i]['order_status'] == "未处理") {
 						this.publicOrdersTableData[i]['state'] = this.chooseAllCheckboxFlag;
 						this.chosenDataIndex.push(i);
 					}
 				}
 			} else { //把所有的checkbox去掉勾选
-				for(let i = 0; i < this.publicOrdersTableData.length; i++) {
+				for (let i = 0; i < this.publicOrdersTableData.length; i++) {
 					this.publicOrdersTableData[i]['state'] = this.chooseAllCheckboxFlag;
 				}
 			}
@@ -138,23 +162,23 @@ let VM = new Vue({
 		search() {
 			let THIS = this;
 			axios.get(HEADER + '/abnormalMeterOrders/check_getAbnormalMeterOrdersForPage.do', {
-					params: {
-						page: THIS.page,
-						pagesize: THIS.pagesize,
-						order_number: THIS.order_number,
-						status: THIS.status,
-						begindate: THIS.begindate,
-						enddate: THIS.enddate,
-						mid: THIS.mid
-					}
-				})
-				.then(function(response) {
-					if(response.data.code == 1) {
+				params: {
+					page: THIS.page,
+					pagesize: THIS.pagesize,
+					order_number: THIS.order_number,
+					status: THIS.status,
+					begindate: THIS.begindate,
+					enddate: THIS.enddate,
+					mid: THIS.mid
+				}
+			})
+				.then(function (response) {
+					if (response.data.code == 1) {
 						let datas = response.data.data.list;
 						THIS.currentPage = response.data.data.currentPage;
 						THIS.allRow = response.data.data.allRow;
 						THIS.publicOrdersTableData = [];
-						for(let i = 0; i < datas.length; i++) { //重新构造数组
+						for (let i = 0; i < datas.length; i++) { //重新构造数组
 							datas[i]['state'] = false;
 							let newObj = {
 								location_name: datas[i].location_name,
@@ -168,22 +192,23 @@ let VM = new Vue({
 								process_time: datas[i].process_time,
 								order_status: datas[i].status,
 								id: datas[i].id, //数据对应的id
-								state: false
+								state: false,
+								markIsShow: THIS.markIsShow
 							}
 							THIS.publicOrdersTableData.push(newObj);
 						}
 					}
 				})
-				.catch(function(error) {
+				.catch(function (error) {
 
 				});
 		},
 		getDateTime(e, type) { //处理日期选择器的值
 			let THIS = this
-			if(type === 1) {
+			if (type === 1) {
 				THIS.begindate = e;
 			}
-			if(type === 2) {
+			if (type === 2) {
 				THIS.enddate = e;
 			}
 		},
@@ -194,14 +219,14 @@ let VM = new Vue({
 		changeToTreated(i) { //更改为已处理
 			let THIS = this;
 			axios({
-					method: 'post',
-					url: HEADER + 'abnormalMeterOrders/update_confirmAbnormalMeterOrders.do',
-					params: {
-						ids: this.publicOrdersTableData[i].id
-					}
-				})
-				.then(function(response) {
-					if(response.data.code == 1) {
+				method: 'post',
+				url: HEADER + 'abnormalMeterOrders/mark_confirmAbnormalMeterOrders.do',
+				params: {
+					ids: this.publicOrdersTableData[i].id
+				}
+			})
+				.then(function (response) {
+					if (response.data.code == 1) {
 						THIS.$Modal.success({
 							title: "提示信息",
 							content: '<p>操作成功</p>'
@@ -216,7 +241,7 @@ let VM = new Vue({
 						});
 					}
 				})
-				.catch(function(error) {
+				.catch(function (error) {
 
 				});
 		},
@@ -225,19 +250,19 @@ let VM = new Vue({
 			let ids;
 			let idArr = [];
 
-			this.chosenDataIndex.forEach(function(value) {
+			this.chosenDataIndex.forEach(function (value) {
 				idArr.push(THIS.publicOrdersTableData[value].id);
 			});
 			ids = idArr.join(",");
 			axios({
-					method: 'post',
-					url: HEADER + '/abnormalMeterOrders/update_confirmAbnormalMeterOrders.do',
-					params: {
-						ids: ids
-					}
-				})
-				.then(function(response) {
-					if(response.data.code == 1) {
+				method: 'post',
+				url: HEADER + '/abnormalMeterOrders/mark_confirmAbnormalMeterOrders.do',
+				params: {
+					ids: ids
+				}
+			})
+				.then(function (response) {
+					if (response.data.code == 1) {
 						THIS.$Modal.success({
 							title: "提示信息",
 							content: '<p>操作成功</p>'
@@ -252,12 +277,12 @@ let VM = new Vue({
 						});
 					}
 				})
-				.catch(function(error) {
+				.catch(function (error) {
 
 				});
 		},
 		asyncOK(type) {
-			if(type == "single") {
+			if (type == "single") {
 				this.changeToTreated(this.changeToTreatedDataIndex);
 			} else {
 				this.changeAllToTreated();

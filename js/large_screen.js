@@ -3,7 +3,6 @@ import echarts from 'echarts'
 import '../css/large_screen.less'
 import { axios } from './general'
 
-
 let lsVM = new Vue({
   el: '#largeScreen',
   data: {
@@ -25,18 +24,17 @@ let lsVM = new Vue({
       let THIS = this
       let datalist, dataArr
       axios({
-        url: HEADER + 'bigScreen/get_getMeterCount.do',
+        url: HEADER + 'bigScreen/check_getMeterCount.do',
       })
         .then(function (response) {
           if (response.data.data) {
-            dataArr = response.data.data.count
+            dataArr = response.data.data
             datalist = [
-              { value: (!!dataArr[1].count ? dataArr[1].count : 0), name: '电表在线占比' },
-              { value: (!!dataArr[0].count ? dataArr[0].count : 0), name: '电表离线线占比' },
+              { value: dataArr.MeterOn, name: '电表在线占比' },
+              { value: dataArr.MeterOff, name: '电表离线线占比' },
             ]
             THIS.drawTotalCharts(datalist)
           }
-
         })
     },
 
@@ -45,13 +43,13 @@ let lsVM = new Vue({
       let THIS = this
       let dataArr, dataAxis = [], data = [], yMax = 0
       axios({
-        url: HEADER + 'bigScreen/get_getLocationMeterNum.do',
+        url: HEADER + 'bigScreen/check_getLocationMeterNum.do',
       })
         .then(function (response) {
           if (response.data.data) {
             dataArr = response.data.data
             for (let i = 0; i < dataArr.length; i++) {
-              dataAxis.push(dataArr[i].NAME)
+              dataAxis.push(dataArr[i].name)
               data.push(dataArr[i].mcount)
               if (dataArr[i].mcount > yMax) {
                 yMax = dataArr[i].mcount + 1
@@ -66,16 +64,16 @@ let lsVM = new Vue({
       let THIS = this
       let dataArr, dataAxis = [], data = [], yMax = 0
       axios({
-        url: HEADER + 'bigScreen/get_getLocationMeterRecor.do',
+        url: HEADER + 'bigScreen/check_getLocationMeterRecor.do',
       })
         .then(function (response) {
           if (response.data.data) {
             dataArr = response.data.data
             for (let i = 0; i < dataArr.length; i++) {
-              dataAxis.push(dataArr[i].locationName)
-              data.push(dataArr[i].c)
-              if (dataArr[i].c > yMax) {
-                yMax = dataArr[i].c + 1
+              dataAxis.push(dataArr[i].lname)
+              data.push(dataArr[i].sum)
+              if (dataArr[i].sum > yMax) {
+                yMax = dataArr[i].sum + 1
               }
             }
             THIS.drawemcCharts('ecCharts', data, dataAxis, yMax)
@@ -87,9 +85,11 @@ let lsVM = new Vue({
     drawTotalCharts(datalist) {
       this.totalCharts = echarts.init(document.getElementById('emtCharts'))
       let option = {
-        color: ['#25f3e6', '#f5c847'],
-        tooltip: {
-          show: false
+        color: ['#25f3e6', '#f5c847'], 
+        tooltip : {
+          trigger: 'item',
+          formatter: '{b} : {c}个',
+          extraCssText:'width:160px;height:30px; ' 
         },
         legend: {
           orient: 'vertical',
@@ -135,21 +135,19 @@ let lsVM = new Vue({
       }
       // 使用刚指定的配置项和数据显示图表。
       this.totalCharts.setOption(option);
-      this.totalCharts.on('click', function (params) {
-        //jumpTo(params)
-      })
     },
 
     //电表数量柱状图/用电量柱状图
     drawemcCharts(dom, data, dataAxis, yMax) {
       let dataShadow = []
-      let yAxisName, barColor, barBorderR, barHoverColor, barW
+      let yAxisName, barColor, barBorderR, barHoverColor, barW,unitType
       for (let i = 0; i < data.length; i++) {
         dataShadow.push(yMax);
       }
       if (dom === 'emcCharts') {
         this.countCharts = echarts.init(document.getElementById(dom))
         yAxisName = '电表（个）'
+        unitType = '个'
         barColor = [
           { offset: 0, color: '#83bff6' },
           { offset: 0.5, color: '#188df0' },
@@ -166,7 +164,8 @@ let lsVM = new Vue({
 
       } else if (dom === 'ecCharts') {
         this.consumptCharts = echarts.init(document.getElementById(dom))
-        yAxisName = '用电量（kw.h）'
+        yAxisName = '用电量（kWh）'
+        unitType = 'kWh'
         barColor = [
           { offset: 0, color: '#b3e2e0' },
           { offset: 0.5, color: '#8fd4d5' },
@@ -186,10 +185,11 @@ let lsVM = new Vue({
         textStyle: {
           color: '#c2c2c2'
         },
-        tooltip : {
+       tooltip : {
           trigger: 'axis',
-          extraCssText:'width:100px;height:80px;'  
-       },
+          formatter: '{b} : {c1}' + unitType,
+          extraCssText:'width:180px;height:30px; ' 
+        },
         calculable: true,
         grid: {
           bottom: '2%',
@@ -360,14 +360,14 @@ let map = new AMap.Map('distribution-map', {
 const getMapMeterInfo = () => {
   let dataArr
   axios({
-    url: HEADER + 'bigScreen/get_getMeterDistribution.do',
+    url: HEADER + 'bigScreen/check_getMeterCount.do',
   }).then(function (response) {
-    if (response.data.data.count) {
-      dataArr = response.data.data.count
+    if (response.data.data) {
+      dataArr = response.data.data.meter
       for (let i = 0; i < dataArr.length; i++) {
         let content
         if (dataArr[i].longitude && dataArr[i].latitude) {
-          if (dataArr[i].status) {
+          if (dataArr[i].online_status) {
             content = `<div class="onlineCircle"></div> `
           } else {
             content = `<div class="outlineCircle"></div>`

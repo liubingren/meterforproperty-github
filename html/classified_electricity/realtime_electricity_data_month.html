@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../../img/bt_logo.png">
+    <title>智慧能源管理平台-分类用电(月用电数据)</title>
+</head>
+
+<body>
+<div id="realtime_electricity_data_month" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper">
+            <breadcrumb class="page-title" style="position:relative;">
+                <breadcrumb-item type="primary">分类用电</breadcrumb-item>
+                <breadcrumb-item type="primary">月用电数据</breadcrumb-item>
+                <breadcrumb-item type="primary" v-if="!isChildTab">
+                    <span class="content-group">
+                        <!--判断显示选中样式-->
+                        <span :class="{unselected:tabType!=='power'}" data-type="power"
+                                @click="toggletabType($event)">
+                            功率
+                        </span>
+                        <span :class="{unselected:tabType!=='electricity'}"
+                            data-type="electricity" @click="toggletabType($event)">
+                            电量
+                        </span>
+                        <span :class="{unselected:tabType!=='voltage'}" data-type="voltage"
+                                @click="toggletabType($event)">
+                            电压
+                        </span>
+                        <span :class="{unselected:tabType!=='electricCurrent'}"
+                            data-type="electricCurrent" @click="toggletabType($event)">
+                            电流
+                        </span>
+                            <span :class="{unselected:tabType!=='powerFactor'}" data-type="powerFactor"
+                                @click="toggletabType($event)">
+                            功率因数
+                        </span>
+                    </span>
+                </breadcrumb-item>
+                <breadcrumb-item type="primary" v-if="isChildTab"> {{tabTypeName}}</breadcrumb-item>
+                <breadcrumb-item type="primary" v-if="isChildTab">
+                    <span class="content-group">
+                        <span :class="{unselected:false}">
+                        {{childTabName}}
+                        </span>
+                    </span>
+                </breadcrumb-item>
+                <i-button style="position: absolute;right:0px;" v-if="isChildTab" @click="backToParent">
+                    返回
+                </i-button>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title">
+                    <i class="public-icon"></i>{{tabTypeName}}
+                </div>
+                <div class="content-wrapper">
+                    <div class="tree-wrapper">
+                        <!--树形控件-->
+                        <vrg-tree @father-event="getSonData($event)"></vrg-tree>
+                    </div>
+                    <div class="main-content">
+                        <!-- 公共工具栏 -->
+                        <div class="btn-group" v-if="!isChildTab">
+                            <span>产品类型:</span>
+                            <i-select v-model="productTypeSelect" class="chargeType" placeholder="产品类型">
+                                <i-option v-for="item in ProductTypeList" :value="item.meter_type" :key="item.meter_type" >{{ item.name }}</i-option>
+                            </i-select>
+                            
+                            <span>用电类型:</span>
+                            <i-select v-model="electricTypeSelect"  class="chargeType" placeholder="用电类型" :label-in-value='true' @on-change="setChildTabName">
+                                <i-option v-for="item in UseElectricityTypeList" :value="item.id" :key="item.id">{{ item.type }}</i-option>
+                            </i-select>
+
+                            <span>时间:</span>
+                            <Date-picker type="month" placeholder="请选择月份" style="width: 200px;height: 40px;" v-model='date'></Date-picker>
+
+                            <i-button type="primary" @click="searching">
+                                查询
+                            </i-button>
+                        </div>
+                        
+                        <!-- 功率表格 -->
+                        <div class="table-wrap"  v-if="tabType==='power' && !isChildTab">
+                            <i-table :columns="powerTDataCol" :data="powerTData" @on-row-click='rowClick'></i-table>
+                            <Page class="page-bar" :total="PTotalPage" :current="PCurrentPage" @on-change="updateTable('P',$event)"
+                            show-elevator show-total/>
+                        </div>
+                        <!-- 功率详情 -->
+                        <div class="table-wrap DetailTData" v-if="tabType==='power' && isChildTab">
+                            <div id="echart" ref="mychart" style="width: 100%;height:400px;"></div>
+                            <i-table  :data="detailTData" :columns="detailTDataCol" border :show-header="!isChildTab"></i-table>
+                            <p><span>峰谷差</span>:最大功率和最小功率只差;<span>峰谷差率</span>:峰谷差与最大负荷的比率</p>
+                        </div> 
+
+                        <!-- 电量表格 -->
+                        <div class="table-wrap"  v-if="tabType==='electricity' && !isChildTab">
+                            <i-table :columns="electricityTDataCol" :data="electricityTData" @on-row-click='rowClick'></i-table>
+                            <Page class="page-bar" :total="ETotalPage" :current="ECurrentPage" @on-change="updateTable('E',$event)"
+                            show-elevator show-total/>
+                        </div>
+                        <!-- 电量 -->
+                        <div class="table-wrap DetailTData" v-show="tabType==='electricity' && isChildTab">
+                            <div id="echartElectricity" ref="mychartElectricity" style="width: 100%;height:400px;"></div>
+                            <i-table  :data="detailTData" :columns="detailTDataCol" border :show-header="false"></i-table>
+                        </div>
+
+                        <!-- 电压表格 -->
+                        <div class="table-wrap"   v-if="tabType==='voltage' && !isChildTab">
+                            <i-table :columns="voltageTDataCol" :data="voltageTData" @on-row-click='rowClick'></i-table>
+                            <Page class="page-bar" :total="UTotalPage" :current="UCurrentPage" @on-change="updateTable('U',$event)"
+                            show-elevator show-total/>
+                        </div>
+                        <!-- 电压详情 -->
+                        <div class="table-wrap DetailTData" v-if="tabType==='voltage' && isChildTab">
+                            <div id="echart" ref="mychart" style="width: 100%;height:400px;"></div>
+                            <i-table  :data="detailTData" :columns="detailTDataCol" border :show-header="!isChildTab"></i-table>
+                        </div>
+
+                        <!-- 电流表格 -->
+                        <div class="table-wrap"  v-if="tabType==='electricCurrent' && !isChildTab">
+                            <i-table :columns="electricCurrentTDataCol" :data="electricCurrentTData" @on-row-click='rowClick'></i-table>
+                            <Page class="page-bar" :total="ITotalPage" :current="ICurrentPage" @on-change="updateTable('I',$event)"
+                            show-elevator show-total/>
+                        </div>
+                        <!-- 电流详情 -->
+                        <div class="table-wrap DetailTData" v-if="tabType==='electricCurrent' && isChildTab">
+                            <div id="echart" ref="mychart" style="width: 100%;height:400px;"></div>
+                            <i-table  :data="detailTData" :columns="detailTDataCol" border :show-header="!isChildTab"></i-table>
+                        </div>
+
+                        <!-- 功率因数表格 -->
+                        <div class="table-wrap"  v-if="tabType==='powerFactor' && !isChildTab">
+                            <i-table :columns="powerFactorTDataCol" :data="powerFactorTData" @on-row-click='rowClick'></i-table>
+                            <Page class="page-bar" :total="PFTotalPage" :current="PFCurrentPage" @on-change="updateTable('PF',$event)"
+                            show-elevator show-total/>
+                        </div>
+                        <!-- 功率因数详情 -->
+                        <div class="table-wrap DetailTData" v-if="tabType==='powerFactor' && isChildTab">
+                            <div id="echart" ref="mychart" style="width: 90%;height:400px;"></div>
+                            <i-table  :data="detailTData" :columns="detailTDataCol" border :show-header="!isChildTab"></i-table>
+                        </div>
+
+                    </div> 
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+
+</div>
+<script src="../../js/realtime_electricity_data_month.js"></script>
+</body>
+
+</html>

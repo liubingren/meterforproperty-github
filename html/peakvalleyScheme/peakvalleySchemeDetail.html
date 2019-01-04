@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../../img/bt_logo.png">
+    <title>智慧能源管理平台-峰平谷方案详情</title>
+</head>
+
+<body>
+    <div id="peakvalleySchemeDetail" class="page-rout">
+        <meter-header></meter-header>
+        <layout class="ivu-layout-has-sider">
+            <meter-sider></meter-sider>
+            <layout class="page-wrapper" v-cloak>
+                <breadcrumb class="page-title">
+                    <breadcrumb-item type="primary">系统配置</breadcrumb-item>
+                    <breadcrumb-item type="primary">峰平谷方案设置</breadcrumb-item>
+                    <breadcrumb-item type="primary">峰平谷方案列表</breadcrumb-item>
+                    <breadcrumb-item type="primary" style="font-weight: 700; color: #495060;">峰平谷方案详情</breadcrumb-item>
+                    <i-button @click="back()" style="position: absolute;right:25px;">返回</i-button>
+                </breadcrumb>
+                <i-content class="page-body">
+                    <!--判断显示内容标题-->
+                    <div class="content-title">
+                        <i class="public-icon"></i>峰平谷方案详情
+                    </div>
+                    <div class="content-wrapper">
+                        <!--表格-->
+                        <div class="main-content">
+                            <div class="btn-group">
+                                <i-button type="primary" @click="batchDelete($event)" style="float:right"> 批量删除</i-button>
+                            </div>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <Checkbox v-model="checkAll" @on-change="doCheckAll($event)"></Checkbox>
+                                        </th>
+                                        <th>时段类型</th>
+                                        <th>开始时段</th>
+                                        <th>结束时段</th>
+                                        <th>价格（元）</th>
+                                        <th>操作</th>
+                                        <th @click="model_add = true">+</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item,index) in detailList">
+                                        <td style="width:120px">
+                                            <Checkbox v-model="checkStatus[index]" @on-change="doCheckOne(item.id,index)"></Checkbox>
+                                        </td>
+                                        <td>
+                                            <!-- <i-Select :value="item.ordernum" size="large" style="width:150px;" disabled>
+                                                <i-option :value="1" :key="1">峰</i-option>
+                                                <i-option :value="2" :key="2">平</i-option>
+                                                <i-option :value="3" :key="3">谷</i-option>
+                                            </i-Select> -->
+                                            <span style="width: 150px;text-align: center">{{(item.ordernum===1)?"峰":((item.ordernum===2)?"平":((item.ordernum===3)?"谷":""))}}</span>
+                                        </td>
+                                        <td>
+                                            <span style="width: 150px;text-align: center">{{item.starttime}}</span>
+                                        </td>
+                                        <td>
+                                            <span style="width: 150px;text-align: center">{{item.endtime}}</span>
+                                        </td>
+                                        <td>
+                                            <span style="text-align: center">{{item.price}}</span>
+                                        </td>
+                                        <td>
+                                            <i-button @click="editClicked(item)" type="default"> 编辑</i-button>
+                                            <i-button @click="deleteClicked(item.id)" style="margin-left: 20px">删除</i-button>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <Page class="page-bar" id="page-bar" :total="totalpage" @on-change="pageInfor($event)"
+                                show-elevator show-total style="margin-top:10px;"></Page>
+
+                            <Modal v-model="model_add" title="新建方案详情" @on-ok="addSchemeDetail" class-name="vertical-center-modal">
+                                <div class="form-info-input" style="margin:5% 20% ;">
+                                    <div class="inforow" style="margin-bottom: 10px;">
+                                        <label style="width:100px;text-align: right;font-size: 14px"><i style="color: red;font-size: 16px">*
+                                            </i>时段类型：</label>
+                                        <span class="info-content">
+                                            <i-Select v-model="add_ordernum" size="large" style="width: 200px;text-align: left">
+                                                <i-option :value="1" :key="1">峰</i-option>
+                                                <i-option :value="2" :key="2">平</i-option>
+                                                <i-option :value="3" :key="3">谷</i-option>
+                                            </i-Select>
+                                        </span>
+                                    </div>
+                                    <div class="inforow" style="margin-bottom: 10px;">
+                                        <label style="width:100px;text-align: right;font-size: 14px"><i style="color: red;font-size: 16px">*
+                                            </i>开始时段：</label>
+                                        <span class="info-content">
+                                            <time-picker format="HH:mm" placeholder="请选择开始时间" v-model="add_starttime"
+                                                style="width: 200px;text-align: left"></time-picker>
+                                        </span>
+                                    </div>
+                                    <div class="inforow" style="margin-bottom: 10px;">
+                                        <label style="width:100px;text-align: right;font-size: 14px"><i style="color: red;font-size: 16px">*
+                                            </i>结束时段：</label>
+                                        <span class="info-content">
+                                            <time-picker format="HH:mm" placeholder="请选择结束时间" v-model="add_endtime"
+                                                style="width: 200px;text-align: left"></time-picker>
+                                        </span>
+                                    </div>
+                                    <div class="inforow" style="margin-bottom: 10px;">
+                                        <label style="width:100px;text-align: right;font-size: 14px"><i style="color: red;font-size: 16px">*
+                                            </i>价格 (元)：</label>
+                                        <span class="info-content">
+                                            <i-input v-model="add_price" size="large" placeholder="请输入价格" style="width: 200px;text-align: left" />
+                                        </span>
+                                    </div>
+                            </Modal>
+
+                            <Modal v-model="model_edit" title="修改方案详情" @on-ok="editSchemeDetail" @on-cancel="editList=[];model_edit=false" class-name="vertical-center-modal">
+                                <div class="form-info-input" style="margin:5% 20% ;">
+                                    <div class="inforow" style="margin-bottom: 10px;">
+                                        <label style="width:100px;text-align: right;font-size: 14px"><i style="color: red;font-size: 16px">*
+                                            </i>时段类型：</label>
+                                        <span class="info-content">
+                                            <i-Select v-model="editList.ordernum" :value="editList.ordernum" size="large"
+                                                style="width: 200px;text-align: left">
+                                                <i-option :value="1" :key="1">峰</i-option>
+                                                <i-option :value="2" :key="2">平</i-option>
+                                                <i-option :value="3" :key="3">谷</i-option>
+                                            </i-Select>
+                                        </span>
+                                    </div>
+                                    <div class="inforow" style="margin-bottom: 10px;">
+                                        <label style="width:100px;text-align: right;font-size: 14px"><i style="color: red;font-size: 16px">*
+                                            </i>开始时段：</label>
+                                        <span class="info-content">
+                                            <time-picker format="HH:mm" placeholder="请选择开始时间" v-model="editList.starttime"
+                                                style="width: 200px;text-align: left"></time-picker>
+                                        </span>
+                                    </div>
+                                    <div class="inforow" style="margin-bottom: 10px;">
+                                        <label style="width:100px;text-align: right;font-size: 14px"><i style="color: red;font-size: 16px">*
+                                            </i>结束时段：</label>
+                                        <span class="info-content">
+                                            <time-picker format="HH:mm" placeholder="请选择结束时间" v-model="editList.endtime"
+                                                style="width: 200px;text-align: left"></time-picker>
+                                        </span>
+                                    </div>
+                                    <div class="inforow" style="margin-bottom: 10px;">
+                                        <label style="width:100px;text-align: right;font-size: 14px"><i style="color: red;font-size: 16px">*
+                                            </i>价格 (元)：</label>
+                                        <span class="info-content">
+                                            <i-input v-model="editList.price" size="large" placeholder="请输入价格" style="width: 200px;text-align: left" />
+                                        </span>
+                                    </div>
+                            </Modal>
+
+                        </div>
+                    </div>
+                </i-content>
+            </layout>
+        </layout>
+    </div>
+    <script src="../../js/peakvalleySchemeDetail.js"></script>
+</body>
+
+</html>

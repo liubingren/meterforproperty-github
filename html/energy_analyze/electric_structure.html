@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+<link rel="icon" type="image/png" href="../../img/bt_logo.png">
     <title>能源管理平台-能源分析</title>
 </head>
 <body>
@@ -24,7 +25,7 @@
                         <vrg-tree @father-event="getSonData($event)"></vrg-tree>
                     </div>
                     <div class="main-content">
-                        <div class="btn-group">
+                        <div class="btn-group energyStructureAnalysis-check">
                             <div>时间类型:
                                 <i-select v-model="timeType"
                                           class="time-type">
@@ -45,10 +46,6 @@
                                              @on-change="getDate($event)"
                                              v-else-if="timeType==='date'"></date-picker>
                             </div>
-                            <i-button type="primary"
-                                      @click="getChartData()">
-                                分析
-                            </i-button>
                         </div>
                         <div id="chart-wrapper"></div>
                     </div>

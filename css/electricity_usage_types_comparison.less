@@ -1,0 +1,276 @@
+.page-body {
+    .content-title {
+        position: relative;
+        height: 80px;
+        line-height: 80px;
+        font-size: 16px;
+        font-weight: bold;
+        text-indent: 70px;
+        background-color: #fff;
+        border-radius: 4px;
+        margin-bottom: 1px;
+        i {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            top: 25px;
+            left: 35px;
+            &.public-icon {
+                background: url("../img/public_meter.png") no-repeat;
+            }
+            &.user-icon {
+                background: url("../img/user_meter.png") no-repeat;
+            }
+            &.pre-pay-icon {
+                background: url("../img/pre_pay_meter.png") no-repeat;
+            }
+            &.meters-statistics {
+                background: url("../img/meters_statistics.png") no-repeat;
+            }
+        }
+    }
+    .content-wrapper {
+        display: flex;
+        justify-content: space-between;
+        min-height: 622px;
+        .tree-wrapper {
+            min-width: 260px;
+            max-width: 260px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 4px;
+            margin-right: 1px;
+            .search-area {
+                margin-bottom: 15px;
+            }
+            .area-tree {
+                max-height: 630px;
+                overflow-y: scroll;
+            }
+        }
+        .main-content {
+            width: 100%;
+            background-color: #fff;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            .btn-group {
+                display: flex;
+                flex-wrap: wrap;
+                margin-top: 30px;
+                align-items: center;
+                margin: auto auto;
+                width: 96%;
+                &>span,
+                &>div,
+                &>button {
+                    margin-right: 5px;
+                    margin-top: 10px;
+                }
+                .chargeType,
+                .input {
+                    height: 40px;
+                    width: 178px;
+                    font-size: 14px;
+                    margin-right:20px;
+                    span {
+                        line-height: 40px;
+                    }
+                }
+                .ivu-select-single {
+                    width: 178px;
+                    .ivu-select-selection {
+                        height: 40px;
+                        position: relative;
+                        div {
+                            height: 100%;
+                            span {
+                                height: 40px;
+                                line-height: 40px;
+                            }
+                        }
+                    }
+                }
+                .ivu-select-single{
+                    height: 40px;
+                    line-height: 40px;
+                }
+                .ivu-date-picker{
+                    input{
+                        height: 40px;
+                        line-height: 40px;
+                    }
+                }
+                .ivu-input-icon {
+                    height: 40px;
+                    line-height: 40px;
+                }
+            }
+            .table-wrap:not(.DetailTData){
+                width: 96%;
+                padding:0 2% 0 2%;
+                margin: 0 auto;
+                .page-bar{
+                    margin-top: 10px;
+                }
+                .ivu-table-wrapper {
+                    width: 100%;
+                    text-align: center;
+                    .ivu-table-header{
+                        width: 100%;
+                    }
+                    table{
+                        border-collapse: collapse;
+                        border-spacing: 0;
+                        thead {
+                            // background-color: #dfeffe;
+                            font-size: 16px;
+                            tr {
+                                height: 50px;
+                                th {
+                                    border:1px solid #bbbec4;
+                                    background-color: #dfeffe;
+                                    &:first-of-type {
+                                        padding-left: 10px;
+                                    }
+                                    &:last-of-type {
+                                        position: relative;
+                                        .add-meter {
+                                            margin: 5px 20px 0 0;
+                                            color: #2d8cf0;
+                                            font-size: 20px;
+                                            cursor: pointer;
+                                        }
+                                    }
+                                    &.price-unit {
+                                        position: relative;
+                                        span {
+                                            position: absolute;
+                                            width: 40px;
+                                            font-size: 12px;
+                                            color: #80848f;
+                                            bottom: 0;
+                                            right: 50%;
+                                            -webkit-transform: translateX(50%);
+                                            -moz-transform: translateX(50%);
+                                            -ms-transform: translateX(50%);
+                                            -o-transform: translateX(50%);
+                                            transform: translateX(50%);
+                                        }
+                                    }
+                                    .ivu-table-sort {
+                                        width: 14px;
+                                        height: 14px;
+                                    }
+                                }
+                            }
+                        }
+                        tbody {
+                            font-size: 14px;
+                            tr {
+                                height: 40px;
+                                &:nth-of-type(2n) {
+                                    background: #f9f9fb;
+                                    td{
+                                        background: #f9f9fb;
+                                    }
+                                }
+                                td{
+                                    max-width: 70px;
+                                    overflow: hidden;
+                                    white-space: nowrap;
+                                    -ms-text-overflow: ellipsis;
+                                    text-overflow: ellipsis;
+                                    // border:1px solid #bbbec4;
+                                    border:none;
+                                    background: none;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .table-wrap.DetailTData{
+                width: 96%;
+                padding:0 2% 0 2%;
+                margin: 10px auto;
+                .ivu-table-wrapper {
+                    width: 100%;
+                    border-spacing: 0;
+                    border-collapse: collapse;
+                    text-align: center;
+                    margin: 20px 0 5px 0;
+                    .ivu-table-header{
+                        width: 100%;
+                    }
+                    table{
+                        tbody {
+                            font-size: 14px;
+                            tr {
+                                height: 40px;
+                                td{
+                                    max-width: 70px;
+                                    overflow: hidden;
+                                    white-space: nowrap;
+                                    -ms-text-overflow: ellipsis;
+                                    text-overflow: ellipsis;
+                                    background: none;
+                                    &:nth-of-type(2n+1){
+                                        font-weight: bold;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                p{
+                    span{
+                        color:red;
+                    }
+                }
+            }
+            @media (max-width: 1450px) {
+                table {
+                    thead {
+                        font-size: 14px;
+                    }
+                    tbody {
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// 弹窗样式
+.add-meter-modal {
+    div {
+        font-size: 14px;
+    }
+    .modal-header {
+        font-size: 16px;
+    }
+    .input-wrapper {
+        display: flex;
+        justify-content: space-between;
+        width: 62%;
+        margin: 15px auto;
+        line-height: 32px;
+        >div {
+            width: 200px;
+            .electric-price,
+            .init-price {
+                width: 160px;
+            }
+        }
+    }
+    .code-wrapper {
+        position: relative;
+        .meter-code {
+            position: absolute;
+            left: 100px;
+        }
+    }
+}

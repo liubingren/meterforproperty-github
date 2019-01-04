@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../../img/bt_logo.png">
+    <title>智慧能源管理平台-峰平谷方案列表</title>
+</head>
+
+<body>
+    <div id="peakvalleySchemeList" class="page-rout">
+        <meter-header></meter-header>
+        <layout class="ivu-layout-has-sider">
+            <meter-sider></meter-sider>
+            <layout class="page-wrapper" v-cloak>
+                <breadcrumb class="page-title">
+                    <breadcrumb-item type="primary">系统配置</breadcrumb-item>
+                    <breadcrumb-item type="primary">峰平谷方案设置</breadcrumb-item>
+                    <breadcrumb-item type="primary">峰平谷方案列表</breadcrumb-item>
+                </breadcrumb>
+                <i-content class="page-body">
+                    <!--判断显示内容标题-->
+                    <div class="content-title">
+                        <i class="public-icon"></i>峰平谷方案列表
+                    </div>
+                    <div class="content-wrapper">
+                        <!--表格-->
+                        <div class="main-content">
+                            <div class="btn-group">
+                                <i-Input placeholder="请输入方案名称" style="width: 260px" v-model="keywords" @on-keyup.enter="doSearch()"></i-Input>
+                                <i-button type="primary" @click="doSearch()" style="margin-left: 20px"> 查询 </i-button>
+                                <i-button type="primary" @click="batchDelete($event)"> 批量删除 </i-button>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <Checkbox @on-change="doCheckAll($event)" v-model="checkAll"> </Checkbox>
+                                        </th>
+                                        <th>方案名称</th>
+                                        <th>操作</th>
+                                        <th @click="openAdd()" class="add-meter">+</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item,index) in schemeList">
+                                        <td>
+                                            <Checkbox @on-change="doCheckOne(item.id,index)" v-model="checkStatus[index]"></Checkbox>
+                                        </td>
+                                        <td :title="item.name"><a :href="`./peakvalleySchemeDetail.html?id=${item.id}`">{{
+                                                item.name }}</a></td>
+                                        <td>
+                                            <i-button @click="operate(item.id,item.name)">编辑</i-button>
+                                            <i-button @click="operate(item.id,'delete')" style="margin-left: 20px">删除</i-button>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="nodata" v-show="noresult">暂无数据</p>
+                            <Page class="page-bar" id="page-bar" :total="totalpage" @on-change="pageInfor($event)"
+                                show-elevator show-total style="margin-top:10px;"></Page>
+
+                            <Modal v-model="model_add" title="新建方案" @on-ok="addScheme" class-name="vertical-center-modal">
+                                <p style="font-size: 14px;margin-bottom: 10px">请为新添加的方案输入名称</p>
+                                <i-Input placeholder="请输入方案名称" size="large" style="width: 260px" v-model="input_add"></i-Input>
+                            </Modal>
+
+                            <Modal v-model="model_edit" title="编辑方案" @on-ok="editScheme" class-name="vertical-center-modal">
+                                <p style="font-size: 14px;margin-bottom: 10px">请为该方案输入一个新名称</p>
+                                <i-Input placeholder="请输入方案名称" size="large" style="width: 260px" v-model="input_edit"></i-Input>
+                            </Modal>
+                        </div>
+                    </div>
+                </i-content>
+            </layout>
+        </layout>
+    </div>
+    <script src="../../js/peakvalleySchemeList.js"></script>
+</body>
+
+</html>

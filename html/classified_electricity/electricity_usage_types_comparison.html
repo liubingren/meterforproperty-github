@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../../img/bt_logo.png">
+    <title>智慧能源管理平台-分类用电(用电类型对比分析)</title>
+</head>
+
+<body>
+<div id="electricity_usage_types_comparison" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper">
+            <breadcrumb class="page-title" style="position:relative;">
+                <breadcrumb-item type="primary">分类用电</breadcrumb-item>
+                <breadcrumb-item type="primary">用电类型对比分析</breadcrumb-item>
+                <breadcrumb-item type="primary">
+                    <span class="content-group">
+                        <!--判断显示选中样式-->
+                        <span :class="{unselected:tabType!=='power'}" data-type="power"
+                                @click="toggletabType($event)">
+                            功率
+                        </span>
+                        <span :class="{unselected:tabType!=='electricity'}"
+                            data-type="electricity" @click="toggletabType($event)">
+                            电量
+                        </span>
+                    </span>
+                </breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title">
+                    <i class="public-icon"></i>{{tabTypeName}}
+                </div>
+                <div class="content-wrapper">
+                    <div class="tree-wrapper">
+                        <!--树形控件-->
+                        <vrg-tree @father-event="getSonData($event)"></vrg-tree>
+                    </div>
+                    <div class="main-content">
+                        <!-- 公共工具栏 -->
+                        <div class="btn-group">
+                            <span>产品类型:</span>
+                            <i-select v-model="productTypeSelect1" class="chargeType" placeholder="产品类型" @on-change="getMeterTypeList1">
+                                <i-option v-for="item in ProductTypeList" :value="item.meter_type" :key="item.meter_type" >{{ item.name }}</i-option>
+                            </i-select>
+                            
+                            <span>用电类型:</span>
+                            <i-select v-model="electricTypeSelect1"  class="chargeType" placeholder="用电类型" :label-in-value='true' @on-change="getMeterTypeList1">
+                                <i-option v-for="item in UseElectricityTypeList" :value="item.id" :key="item.id">{{ item.type }}</i-option>
+                            </i-select>
+
+                            <span>电表编号:</span>
+                            <i-select v-model="midSelect1"  class="chargeType" placeholder="电表编号"  filterable  :clearable='true' ref="midSelect1">
+                                <i-option v-for="item in midList1" :value="item.mid" :key="item.mid">{{ item.name }}</i-option>
+                            </i-select>
+                        </div>
+                        <div class="btn-group" style="margin-bottom: 10px;">
+                            <span>产品类型:</span>
+                            <i-select v-model="productTypeSelect2" class="chargeType" placeholder="产品类型" @on-change="getMeterTypeList2">
+                                <i-option v-for="item in ProductTypeList" :value="item.meter_type" :key="item.meter_type" >{{ item.name }}</i-option>
+                            </i-select>
+                            
+                            <span>用电类型:</span>
+                            <i-select v-model="electricTypeSelect2"  class="chargeType" placeholder="用电类型" :label-in-value='true' @on-change="getMeterTypeList2">
+                                <i-option v-for="item in UseElectricityTypeList" :value="item.id" :key="item.id">{{ item.type }}</i-option>
+                            </i-select>
+
+                            <span>电表编号:</span>
+                            <i-select v-model="midSelect2"  class="chargeType" placeholder="电表编号"  filterable :clearable='true' ref="midSelect2">
+                                <i-option v-for="item in midList2" :value="item.mid" :key="item.mid">{{ item.name }}</i-option>
+                            </i-select>
+
+                            <span>时间:</span>
+                            <Date-picker type="date" placeholder="请选择日期" style="width: 200px;height: 40px;" v-model='date'></Date-picker>
+
+                            <i-button type="primary" @click="searching">
+                                对比
+                            </i-button>
+                        </div>
+                        
+                        <!-- 功率表格 -->
+                        <div class="table-wrap"  v-if="tabType==='power'">
+                            <div id="echart" ref="mychart" style="width: 100%;height:400px;margin-bottom: 10px;" v-if='chartData1'></div>
+                            <div style="width: 100%;height:100px;line-height: 100px;text-align: center;margin-bottom: 10px;" v-else>暂无数据</div>
+                            <i-table :columns="powerTDataCol" :data="powerTData"></i-table>
+                        </div>
+
+                        <!-- 电量表格 -->
+                        <div class="table-wrap"  v-if="tabType==='electricity'">
+                            <div id="echartElectricity" ref="mychartElectricity" style="width: 100%;height:400px;margin-bottom: 10px;" v-if='chartData2'></div>
+                            <div style="width: 100%;height:100px;line-height: 100px;text-align: center;margin-bottom: 10px;" v-else>暂无数据</div>
+                            <i-table :columns="electricityTDataCol" :data="electricityTData"></i-table>
+                        </div>
+                    </div> 
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+
+</div>
+<script src="../../js/electricity_usage_types_comparison.js"></script>
+</body>
+
+</html>

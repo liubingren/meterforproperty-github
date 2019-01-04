@@ -1,4 +1,4 @@
-import { Vue, HEADER, axios, hidePage } from './general.js'
+import { Vue, HEADER, axios, hidePage, isShowBtn } from './general.js'
 import '../css/electrical.less'
 import { join } from 'path';
 
@@ -21,6 +21,7 @@ let eaVM = new Vue({
     //全选
     readMids: [],
     checkStatus: [],
+    check : false
   },
   mounted() {
     this.getAnomalyData(1)
@@ -45,11 +46,15 @@ let eaVM = new Vue({
           THIS.totalpage = response.data.data.allRow
           THIS.totalP = response.data.data.allRow
           hidePage(THIS.totalpage)
+          setTimeout(() =>{
+            isShowBtn()
+         },100)
         } else {
           THIS.totalpage = 0
           hidePage(THIS.totalpage)
         }
       })
+       
     },
     //获取没处理总数
     gethandleCount() {
@@ -76,10 +81,10 @@ let eaVM = new Vue({
       } else {
         ids = this.readMids
       }
-     if(ids){
+     if(ids.length > 0){
       axios({
         method: 'post',
-        url: HEADER + '/abnormalMeter/update_confirmAbnormalMeter.do',
+        url: HEADER + '/abnormalMeter/mark_confirmAbnormalMeter.do',
         params: {
           ids: ids
         }
@@ -107,6 +112,7 @@ let eaVM = new Vue({
       }
       else {   // 没传 mid 就是全选/全不选的情况
         if (e) {
+          
           this.checkStatus = []
           this.readMids = []
           for (let item of this.list) {
@@ -135,6 +141,7 @@ let eaVM = new Vue({
       this.pageCurrent = 1
       this.getAnomalyData(this.pageCurrent)
       this.gethandleCount()
+      this.check = false
     },
     //分页
     pageInfor(e) {

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../img/bt_logo.png">
+    <title>智慧能源管理平台-异常记录</title>
+</head>
+
+<body>
+    <div id="anomaly_electrical" class="page-rout" v-cloak>
+        <meter-header></meter-header>
+        <layout class="ivu-layout-has-sider">
+            <meter-sider></meter-sider>
+            <layout class="page-wrapper" v-cloak>
+                <breadcrumb class="page-title">
+                    <breadcrumb-item type="primary">异常用电</breadcrumb-item>
+                    <breadcrumb-item type="primary">
+                        <span class="content-group">
+                            <!--判断显示选中样式-->
+                            <span :class="{unselected:anomalyType!=='recordList'}" data-type="recordList" data-typeid="1"
+                                @click="toggleAnomalyType($event)">
+                                异常记录
+                            </span>
+                            <span :class="{unselected:anomalyType!=='thresholdSetting'}" data-type="thresholdSetting"
+                                data-typeid="2" @click="toggleAnomalyType($event)">
+                                阈值设置
+                            </span>
+                        </span>
+                    </breadcrumb-item>
+                </breadcrumb>
+
+                <i-content class="page-body">
+                    <!--判断显示内容标题-->
+                    <div class="content-title">
+                        <i class="anomaly-icon"></i>用电异常
+                    </div>
+                    <div class="content-wrapper">
+                        <!--dom树-->
+                        <div class="tree-wrapper">
+                            <!--树形控件-->
+                            <vrg-tree @father-event="getSonData($event)"></vrg-tree>
+                        </div>
+                        <!--异常记录-->
+                        <div class="main-content" v-if="anomalyType=='recordList'">
+                            <div style="margin-top:28px">
+                                <div class="btn-group">
+                                    <div class="time-group">
+                                        <label>产品类型：</label>
+                                        <i-select size="large" style="width:150px" v-model="productType" @on-change="productTypeChanged($event)">
+                                            <i-option v-for="item in productTypeList" :value="item.meter_type" :key="item.meter_type">{{
+                                                item.name }}</i-option>
+                                        </i-select>
+                                    </div>
+                                    <div class="time-group">
+                                        <label>用电类型：</label>
+                                        <i-select size="large" style="width:150px" v-model="useElecType" @on-change="useElecTypeChanged($event)">
+                                            <i-option v-for="item in useelecTypeList" :value="item.id" :key="item.id">{{
+                                                item.type }}</i-option>
+                                        </i-select>
+                                    </div>
+                                    <div class="time-group">
+                                        <label>电表编号：</label>
+                                        <i-select size="large" style="width:226px" :clearable="true" v-model="meterNum"
+                                            @on-change="meterNumChanged($event)" filterable ref="selectedNum" clearable>
+                                            <i-option v-for="item in meterNumList" :value="item.mid" :key="item.mid">{{
+                                                item.name }}</i-option>
+                                        </i-select>
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <div class="time-group">
+                                        <label>开始时间：</label>
+                                        <date-picker size="large" type="date" :value="startime" placeholder="请选择时间"
+                                            style="width: 150px" @on-change="handleChange($event,1)">
+                                        </date-picker>
+                                    </div>
+                                    <div class="time-group">
+                                        <label>结束时间：</label>
+                                        <date-picker size="large" type="date" :value="endtime" placeholder="请选择时间"
+                                            style="width: 150px" @on-change="handleChange($event,2)">
+                                        </date-picker>
+                                    </div>
+                                    <div class="time-group">
+                                        <label>异常事件：</label>
+                                        <i-select size="large" style="width:150px" v-model="anomalyEvent" @on-change="anomalyEventChanged($event)" clearable>
+                                            <i-option v-for="item in anomalyEventList" :value="item.alarm_code" :key="item.alarm_code">{{
+                                                item.alarm_value }}</i-option>
+                                        </i-select>
+                                    </div>
+                                    <i-button type="primary" class="search-data" @click="doSearch(1)">
+                                        查询
+                                    </i-button>
+                                </div>
+                            </div>
+                            <table style="margin: 0 30px">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100px">序号</th>
+                                        <th>电表编号</th>
+                                        <th>安装位置</th>
+                                        <th>名称</th>
+                                        <th>异常时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item,index) in recordList" :key="item.id" :class="{ colorRed: (item.startw === null || item.endw === null ? true :false) }">
+                                        <td class="bind-line" :class="{'bind-line-1':item.orders===1,'bind-line-2':item.orders===2,'bind-line-3':item.orders===3}">{{
+                                            index + 1 }}</td>
+                                        <!--名称-->
+                                        <td>{{ item.alarm_value }}</td>
+                                        <!-- 电表编号 -->
+                                        <td>{{ item.install_address }}</td>
+                                        <!-- 安装位置 -->
+                                        <td>{{ item.mid }}</td>
+                                        <!--异常时间-->
+                                        <td>{{ item.alarm_time }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <Page class="page-bar" id="page-bar" :total="totalpage" :current.sync="pageCurrent" @on-change="pageInfor($event,1)"
+                                show-elevator show-total></Page>
+                        </div>
+                        <!--阈值设置-->
+                        <div class="main-content" v-else>
+                            <div class="btn-group" style="margin-top: 28px">
+                                <div class="time-group">
+                                    <label>产品类型：</label>
+                                    <i-select size="large" style="width:150px" v-model="productType_set" @on-change="productTypeChanged($event)">
+                                        <i-option v-for="item in productTypeList_set" :value="item.meter_type" :key="item.meter_type">{{
+                                            item.name }}</i-option>
+                                    </i-select>
+                                </div>
+                                <div class="time-group">
+                                    <label>用电类型：</label>
+                                    <i-select size="large" style="width:150px" v-model="useElecType_set" @on-change="useElecTypeChanged($event)">
+                                        <i-option v-for="item in useelecTypeList_set" :value="item.id" :key="item.id">{{
+                                            item.type }}</i-option>
+                                    </i-select>
+                                </div>
+                                <div class="time-group">
+                                    <label>电表编号：</label>
+                                    <i-input type="text"  style="width:150px"  v-model="meterNum_set" :value="meterNum_set" size="large" placeholder="请输入电表编号" clearable/>
+                                </div>
+                                <i-button type="primary" class="search-data" @click="doSearch(1)"> 查询 </i-button>
+                            </div>
+                            <i-table class="table_set" stripe :columns="columns" :data="setList"></i-table>
+                            <br />
+                            <Page class="page-bar" id="page-bar2" :total="totalpage_set" :current.sync="pageCurrent_set" @on-change="pageInfor($event,2)"
+                                show-elevator show-total></Page>
+                        </div>
+                    </div>
+                </i-content>
+            </layout>
+        </layout>
+
+    </div>
+    <script src="../js/anomaly_electrical.js"></script>
+</body>
+
+</html>

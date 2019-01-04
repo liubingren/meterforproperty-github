@@ -1,5 +1,4 @@
 @tableBorder: 1px solid #dfeffe;
-
 .content-title {
   position: relative;
   height: 80px;
@@ -48,10 +47,12 @@
     flex-wrap: wrap;
     margin-top: 30px;
     justify-content: space-evenly;
-    input, > button, > div {
+    input,
+    >button,
+    >div {
       height: 40px;
     }
-    > button {
+    >button {
       font-size: 14px;
       margin-bottom: 30px;
     }
@@ -75,14 +76,16 @@
       }
     }
     .search-meters {
-      width: 200px;
+      width: 250px;
       margin-bottom: 30px;
       .meters-code-addr {
         height: 40px;
       }
     }
-    .export-data, .import-data,
-    .download-model, .update-meters {
+    .export-data,
+    .import-data,
+    .download-model,
+    .update-meters {
       display: block;
       width: 60px;
       height: 40px;
@@ -90,7 +93,8 @@
       color: #fff;
       font-size: 14px;
     }
-    .import-data, .update-meters {
+    .import-data,
+    .update-meters {
       position: relative;
       input {
         position: absolute;
@@ -102,7 +106,8 @@
         cursor: pointer;
       }
     }
-    .download-model, .update-meters {
+    .download-model,
+    .update-meters {
       width: 88px;
     }
   }
@@ -157,6 +162,7 @@
       font-size: 14px;
       tr {
         height: 40px;
+        line-height: 40px;
         &:nth-of-type(2n) {
           background: #f9f9fb;
         }
@@ -173,8 +179,9 @@
             position: relative;
             width: 20px;
             height: 100%;
-            right: 50px;
-            filter: drop-shadow(#02093d 50px 0);
+            // right: 50px;
+            // filter: drop-shadow(#02093d 50px 0);
+            // border-right: 20px solid transparent;
           }
           &.bind-line-1 {
             background: url("../img/meter_bind_1.png");
@@ -205,9 +212,10 @@
     width: 62%;
     margin: 15px auto;
     line-height: 32px;
-    > div {
+    >div {
       width: 200px;
-      .electric-price, .init-price {
+      .electric-price,
+      .init-price {
         width: 160px;
       }
     }
@@ -232,12 +240,14 @@
 
 // 抄表弹窗
 .read-meter-modal {
-  .ivu-modal { // iView 自动生成的类名
+  .ivu-modal {
+    // iView 自动生成的类名
     width: 1000px !important;
     .modal-header {
       font-size: 16px;
     }
-    .info-bar, table {
+    .info-bar,
+    table {
       margin: 0 auto;
       width: 90%;
     }
@@ -281,9 +291,7 @@
         font-size: 16px;
         .with-unit {
           position: relative;
-          top: -8px;
           span {
-            position: absolute;
             width: 40px;
             font-size: 14px;
             color: #80848f;
@@ -298,6 +306,13 @@
               width: 60px;
             }
           }
+          // 只在火狐下执行
+          @-moz-document url-prefix() {
+            top: -8px;
+            span {
+              position: absolute;
+            }
+          }
         }
       }
       tbody {
@@ -306,14 +321,16 @@
         tr {
           border-bottom: @tableBorder;
           border-left: @tableBorder;
+          height: 40px;
+          line-height: 40px;
           td {
-            height: 40px;
             border-right: @tableBorder;
           }
         }
       }
     }
-    .ivu-modal-footer { // iView 自动生成的类名
+    .ivu-modal-footer {
+      // iView 自动生成的类名
       border: none;
     }
   }

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../../img/bt_logo.png">
     <title>智慧能源管理平台-用电异常</title>
 </head>
 <body>
@@ -17,15 +18,19 @@
                         <!--判断显示选中样式-->
                         <span :class="{unselected:meterType!=='publicMeter'}"
                         data-typeid="1" data-type="publicMeter" @click="toggleMeterType($event)">
-                            瓦良格公共区域监控电表
+                        三相安规电表
                         </span>
                         <span :class="{unselected:meterType!=='userMeter'}"
                         data-typeid="2" data-type="userMeter" @click="toggleMeterType($event)">
-                            瓦良格住户监控电表
+                        单相电表
                         </span>
                         <span :class="{unselected:meterType!=='prePayMeter'}"
                         data-typeid="3" data-type="prePayMeter" @click="toggleMeterType($event)">
-                            瓦良格预付费电表
+                        预付费电表
+                        </span>
+                        <span :class="{unselected:meterType!=='AGMeter'}"
+                        data-typeid="4" data-type="AGMeter" @click="toggleMeterType($event)">
+                        单相安规电表
                         </span>
                     </span>
                 </breadcrumb-item>
@@ -33,29 +38,33 @@
             <i-content class="page-body">
                 <!--判断显示内容标题-->
                 <div class="content-title" v-if="meterType==='publicMeter'">
-                    <i class="public-icon"></i>瓦良格公共区域监控电表
+                    <i class="public-icon"></i>三相安规电表
                 </div>
                 <div class="content-title" v-else-if="meterType==='userMeter'">
-                    <i class="user-icon"></i>瓦良格住户监控电表
+                    <i class="user-icon"></i>单相电表
                 </div>
                 <div class="content-title" v-else-if="meterType==='prePayMeter'">
-                    <i class="pre-pay-icon"></i>瓦良格预付费电表
+                    <i class="pre-pay-icon"></i>预付费电表
+                </div>
+                <div class="content-title" v-else-if="meterType==='AGMeter'">
+                    <i class="pre-pay-icon"></i>单相安规电表
                 </div>
                 <div class="content-wrapper">
                     <!--表格-->
                     <div class="main-content" v-if="meterType!=='electricitytatistics'">
                         <div class="btn-group">
-                            <i-button type="primary" class="download-model" @click="handleDo($event,'batch')">
+                            <i-button type="primary" class="download-model  abnormalMeter-mark" @click="handleDo($event,'batch')">
                                 批量处理
                             </i-button>
-                            <a class="export-data ivu-btn ivu-btn-primary" @click ="exportInfor($event)">导出</a>
+                            <a class="export-data ivu-btn ivu-btn-primary abnormalMeter-export" @click ="exportInfor($event)">导出</a>
                             <div class="time-group"  v-if="meterType!=='prePayMeter'">
-                                <Icon type="search" @click="getAnomalyData(1)"></Icon>
-                                <i-Input placeholder="请输入电表编号/安装位置" size="large" style="width: 220px" v-model.trim="keywords" @on-keyup.enter="getAnomalyData(1)"></i-Input>
+                                <Icon type="search" @click="getAnomalyData(1)" class="abnormalMeter-check"></Icon>
+                                <i-Input  v-if="meterType ==='publicMeter'" placeholder="请输入电表编号/安装位置" size="large" style="width: 220px" v-model.trim="keywords" @on-keyup.enter="getAnomalyData(1)"></i-Input>
+                                <i-Input  v-if="meterType ==='userMeter'||meterType ==='AGMeter'" placeholder="请输入电表编号/楼栋号/房号" size="large" style="width: 220px" v-model.trim="keywords" @on-keyup.enter="getAnomalyData(1)"></i-Input>
                             </div>
                             <div class="time-group"  v-if="meterType==='prePayMeter'">
                                     <Icon type="search" @click="getAnomalyData(1)"></Icon>
-                                    <i-Input placeholder="请输入电表编号/用户名称" size="large" style="width: 220px" v-model.trim="keywords" @on-keyup.enter="getAnomalyData(1)"></i-Input>
+                                    <i-Input placeholder="请输入电表编号/用户编号/用户名称" size="large" style="width: 260px" v-model.trim="keywords" @on-keyup.enter="getAnomalyData(1)"></i-Input>
                                 </div>
                             <div class="untreated">
                                 未处理电表个数：<span class="colorRed">{{ handleCount }}</span>
@@ -65,15 +74,15 @@
                             <thead>
                             <tr>
                                 <th>
-                                    <Checkbox @on-change="getCheckboxes($event)">
+                                    <Checkbox @on-change="getCheckboxes($event)" v-model="check">
                                     </Checkbox>
                                 </th>
                                 <th>小区名称</th>
                                 <th>电表编号</th>
 
                                 <!--只有住户电表显示-->
-                                <th v-if="meterType==='userMeter'">楼栋号</th>
-                                <th v-if="meterType==='userMeter'">房号</th>
+                                <th v-if="meterType==='userMeter'||meterType==='AGMeter'">楼栋号</th>
+                                <th v-if="meterType==='userMeter'||meterType==='AGMeter'">房号</th>
 
                                 <!--只有预付费电表显示-->
                                 <th v-if="meterType==='prePayMeter'">用户编号</th>
@@ -118,8 +127,8 @@
                                 <td>{{ item.mid  }}</td> <!-- 电表编号 -->
 
                                 <!--只有住户电表显示-->
-                                <td v-if="meterType==='userMeter'">{{ item.building }}</td> <!--楼栋号-->
-                                <td v-if="meterType==='userMeter'">{{ item.room_number }}</td><!--房号-->
+                                <td v-if="meterType==='userMeter'||meterType==='AGMeter'">{{ item.building }}</td> <!--楼栋号-->
+                                <td v-if="meterType==='userMeter'||meterType==='AGMeter'">{{ item.room_number }}</td><!--房号-->
 
                                 <!--预付费电表显示-->
                                 <td v-if="meterType==='prePayMeter'">{{ item.usercode}}</td><!--用户编号-->
@@ -139,7 +148,7 @@
                                 <td :title="item.abnormal_time">{{ item.abnormal_time }}</td><!--异常时间-->
                                 <td :title="item.process_time">
                                     <span v-if="item.process_time !== null">{{ item.process_time }}</span>
-                                    <button :data-itemId="item.id" @click="handleDo($event)" v-if="item.process_time === null" class="ivu-btn ivu-btn-ghost" style="color: #80848f">标记已处理</button>
+                                    <button :data-itemId="item.id" @click="handleDo($event)" v-if="item.process_time === null" class="ivu-btn ivu-btn-ghost abnormalMeter-mark" style="color: #80848f">标记已处理</button>
                                 </td><!--处理时间-->
                                 <td :class="{ colorRed: (item.abnormal_status == '未处理' ? true : false )}">{{ item.abnormal_status }}</td><!--状态-->
                             </tr>
@@ -152,9 +161,6 @@
             </i-content>
         </layout>
     </layout>
-    <!-- 个人密码设置 -->
-    <user-config></user-config>
-    <pwd-config></pwd-config>
 </div>
 <script src="../../js/electrical_anomaly.js"></script>
 </body>

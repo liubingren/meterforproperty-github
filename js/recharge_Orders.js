@@ -48,7 +48,6 @@ let VM = new Vue({
 			enddate: '',
 			order_number: '',
 			mid: '', //电表编号
-			location_id: '123',
 			page: 1,
 			pagesize: 10,
 			date: '',
@@ -57,8 +56,30 @@ let VM = new Vue({
 			currentPage: 1,
 			location_id: '',
 			totalDate: '',
+			exportIsShow: false,
 			treeData: [],
 			publicOrdersTableData: []
+		}
+	},
+	mounted: function() {
+		let THIS = this;
+		axios({
+				url: HEADER + '/permission/check_getCurrentUserPermission.do'
+			})
+			.then(({
+				data
+			}) => {
+				console.log(data);
+				for(let item of data.data) {
+					if('meterOrders-export' == item) {
+						THIS.exportIsShow = true;
+					}
+				}
+			})
+			
+		if(sessionStorage.getItem('unitId')){
+		  	THIS.location_id=sessionStorage.getItem('unitId');
+		  	THIS.search();
 		}
 	},
 	methods: {
@@ -115,7 +136,7 @@ let VM = new Vue({
 					}
 				})
 				.catch(function(error) {
-					
+
 				});
 		},
 		getOrdersTotalMoney() {
@@ -138,7 +159,7 @@ let VM = new Vue({
 					}
 				})
 				.catch(function(error) {
-					
+
 				});
 		},
 		updateTable(e) {

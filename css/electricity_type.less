@@ -1,0 +1,144 @@
+.ivu-breadcrumb>span:last-child {
+    color: #999;
+    font-size: 14px;
+  }
+  .page-body {
+    .content-title {
+      position: relative;
+      height: 80px;
+      line-height: 80px;
+      font-size: 16px;
+      font-weight: bold;
+      text-indent: 70px;
+      background-color: #fff;
+      border-radius: 4px;
+      margin-bottom: 1px;
+      i {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        top: 25px;
+        left: 35px;
+        background: url("../img/electrical-type.png") no-repeat;
+      }
+    }
+    .content-wrapper {
+      width: 100%;
+      display: flex;
+      min-height: 700px;
+      margin-bottom: 25px;
+      background-color: #fff;
+      border-radius: 4px;
+      padding: 20px 0;
+      flex-direction: column;
+      .search-group{
+        margin-left: 30px;
+       button{
+         margin-left: 10px;
+       }
+      }
+      table {
+        margin: 30px;
+        width: 96.5%;
+        border-spacing: 0;
+        border-collapse: collapse;
+        text-align: center;
+        thead {
+          background-color: #dfeffe;
+          font-size: 16px;
+          tr {
+            height: 50px;
+            th {
+              &:first-of-type {
+                padding-left: 10px;
+              }
+              &.add-meter {
+                  margin: 5px 20px 0 0;
+                  color: #2d8cf0;
+                  font-size: 24px;
+                  cursor: pointer;
+                }
+              &.price-unit {
+                position: relative;
+                span {
+                  position: absolute;
+                  width: 40px;
+                  font-size: 12px;
+                  color: #80848f;
+                  bottom: 0;
+                  right: 50%;
+                  -webkit-transform: translateX(50%);
+                  -moz-transform: translateX(50%);
+                  -ms-transform: translateX(50%);
+                  -o-transform: translateX(50%);
+                  transform: translateX(50%);
+                }
+              }
+            }
+            th:first-child{
+              width: 50px
+            }
+            th:nth-child(6){
+              width: 350px
+            }
+          }
+        }
+        tbody {
+          font-size: 14px;
+          color: #80848f;
+          tr {
+            height: 40px;
+            td:not(.operation-td) {
+              max-width: 70px;
+              overflow: hidden;
+              white-space: nowrap;
+              -ms-text-overflow: ellipsis;
+              text-overflow: ellipsis;
+              &:first-of-type {
+                padding-left: 10px;
+              }
+            }
+           td:first-child{
+              width: 50px
+            }
+            td:nth-child(6){
+              width: 350px
+            }
+          }
+          tr:nth-child(2n){
+            background-color: #f9f9fb;
+          }
+          
+        }
+      }
+      @media (max-width: 1450px) {
+        table {
+          thead {
+            font-size: 14px;
+          }
+          tbody {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+  //弹框内部样式
+.add-modal{
+  .ivu-modal-body{
+    color: #80848f;
+    .input-bar{
+      width: 100%;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      span{
+        display: inline-block;
+        width: 115px;
+        }
+      }
+    }
+  }
+  .page-bar{
+    display: none;
+  }

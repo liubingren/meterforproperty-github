@@ -1,0 +1,240 @@
+.page-body .inputedBorder input {
+  border: #2d8cf0 solid 1px !important;
+}
+.page-body .checkboxChanged {
+  color: #2d8cf0;
+}
+.page-body .content-title {
+  position: relative;
+  height: 80px;
+  line-height: 80px;
+  font-size: 16px;
+  font-weight: bold;
+  text-indent: 70px;
+  background-color: #fff;
+  border-radius: 4px;
+  margin-bottom: 1px;
+}
+.page-body .content-title i {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  top: 25px;
+  left: 35px;
+}
+.page-body .content-title i.anomaly-icon {
+  background: url("../img/anomaly_ele.png") no-repeat;
+}
+.page-body .content-title i.user-icon {
+  background: url("../img/user_meter.png") no-repeat;
+}
+.page-body .content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  min-height: 700px;
+  margin-bottom: 25px;
+}
+.page-body .content-wrapper .tree-wrapper {
+  min-width: 260px;
+  max-width: 260px;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 4px;
+  margin-right: 1px;
+}
+.page-body .content-wrapper .tree-wrapper .area-tree {
+  max-height: 630px;
+  overflow-y: scroll;
+}
+.page-body .content-wrapper .tree-wrapper .search-area {
+  margin-bottom: 25px;
+}
+.page-body .content-wrapper .main-content {
+  width: 100%;
+  background-color: #fff;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.page-body .content-wrapper .main-content .btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 14px auto 0;
+  width: 96%;
+  justify-content: flex-start;
+  position: relative;
+  margin-bottom: 10px;
+}
+.page-body .content-wrapper .main-content .btn-group .untreated {
+  position: absolute;
+  right: 5px;
+  color: #80848f;
+  font-weight: bold;
+  font-size: 15px;
+}
+.page-body .content-wrapper .main-content .btn-group .time-group {
+  margin-right: 20px;
+  position: relative;
+  margin-bottom: 10px;
+}
+.page-body .content-wrapper .main-content .btn-group .time-group label {
+  color: #504e4e;
+}
+.page-body .content-wrapper .main-content .btn-group .time-group .ivu-icon-search {
+  width: 30px;
+  height: 30px;
+  font-size: 25px;
+  color: #999;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 999;
+  text-align: center;
+  cursor: pointer;
+}
+.page-body .content-wrapper .main-content .btn-group button {
+  margin-bottom: 30px;
+  margin-right: 20px;
+}
+.page-body .content-wrapper .main-content .btn-group a {
+  margin-bottom: 30px;
+  margin-right: 20px;
+  height: 36px;
+  line-height: 24px;
+}
+.page-body .content-wrapper .main-content .table_set {
+  width: 66vw;
+  margin-left: 30px;
+}
+.page-body .content-wrapper .main-content .table_set tr .operateClm button {
+  font-size: 14px;
+  color: #fff;
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: #2d8cf0;
+  border: solid 1px #fff;
+  border-radius: 4px;
+}
+.page-body .content-wrapper .main-content .table_set tr td input {
+  text-align: center;
+}
+.page-body .content-wrapper .main-content table {
+  width: 95%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  text-align: center;
+}
+.page-body .content-wrapper .main-content table thead {
+  background-color: #dfeffe;
+  font-size: 16px;
+}
+.page-body .content-wrapper .main-content table thead tr {
+  height: 50px;
+}
+.page-body .content-wrapper .main-content table thead tr .ivu-table-column-center {
+  background: #d8ebfe;
+}
+.page-body .content-wrapper .main-content table thead tr th:last-of-type {
+  position: relative;
+}
+.page-body .content-wrapper .main-content table thead tr th:last-of-type .add-meter {
+  margin: 5px 20px 0 0;
+  color: #2d8cf0;
+  font-size: 20px;
+  cursor: pointer;
+}
+.page-body .content-wrapper .main-content table thead tr th.price-unit {
+  position: relative;
+}
+.page-body .content-wrapper .main-content table thead tr th.price-unit span {
+  position: absolute;
+  width: 40px;
+  font-size: 12px;
+  color: #80848f;
+  bottom: 0;
+  right: 50%;
+  -webkit-transform: translateX(50%);
+  -moz-transform: translateX(50%);
+  -ms-transform: translateX(50%);
+  -o-transform: translateX(50%);
+  transform: translateX(50%);
+}
+.page-body .content-wrapper .main-content table tbody {
+  font-size: 14px;
+  color: #80848f;
+}
+.page-body .content-wrapper .main-content table tbody tr {
+  height: 40px;
+}
+.page-body .content-wrapper .main-content table tbody tr td:not(.operation-td) {
+  max-width: 70px;
+  overflow: hidden;
+  white-space: nowrap;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+.page-body .content-wrapper .main-content table tbody tr td:not(.operation-td).bind-line {
+  position: relative;
+  width: 20px;
+}
+.page-body .content-wrapper .main-content table tbody tr td:not(.operation-td).bind-line-1 {
+  background: url("../img/meter_bind_1.png");
+}
+.page-body .content-wrapper .main-content table tbody tr td:not(.operation-td).bind-line-2 {
+  background: url("../img/meter_bind_2.png");
+}
+.page-body .content-wrapper .main-content table tbody tr td:not(.operation-td).bind-line-3 {
+  background: url("../img/meter_bind_3.png");
+}
+.page-body .content-wrapper .main-content table tbody tr:nth-child(2n) {
+  background-color: #f9f9fb;
+}
+@media (max-width: 1450px) {
+  .page-body .content-wrapper .main-content table thead {
+    font-size: 14px;
+  }
+  .page-body .content-wrapper .main-content table tbody {
+    font-size: 12px;
+  }
+}
+.page-body .content-wrapper .colorRed {
+  color: red;
+}
+.add-meter-modal div {
+  font-size: 14px;
+}
+.add-meter-modal .modal-header {
+  font-size: 16px;
+}
+.add-meter-modal .input-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 62%;
+  margin: 15px auto;
+  line-height: 32px;
+}
+.add-meter-modal .input-wrapper > div {
+  width: 200px;
+}
+.add-meter-modal .input-wrapper > div .electric-price,
+.add-meter-modal .input-wrapper > div .init-price {
+  width: 160px;
+}
+.add-meter-modal .code-wrapper {
+  position: relative;
+}
+.add-meter-modal .code-wrapper .meter-code {
+  position: absolute;
+  left: 100px;
+}
+.page-bar {
+  display: none;
+}
+.btn-row {
+  margin-top: 50px !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+.btn-row button:first-child {
+  margin-right: 120px;
+}

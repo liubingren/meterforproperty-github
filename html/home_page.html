@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../img/bt_logo.png">
     <title>智慧能源管理平台-首页</title>
 </head>
 <body>
@@ -56,7 +57,7 @@
                                     <span>
                                         <i class="ivu-icon ivu-icon-social-buffer"></i>接入单位
                                     </span>
-                                    <span>{{ accessUnit + '个'}} </span>
+                                    <span>{{ (accessUnit ? (accessUnit + '个' + '个') : ('0个')) }} </span>
                                 </div>
                             </div>
                         </div>
@@ -76,9 +77,7 @@
             </i-content>
         </layout>
     </layout>
-    <!-- 个人密码设置 -->
-    <user-config></user-config>
-    <pwd-config></pwd-config>
+  
 </div>
 <script src="../js/home_page.js"></script>
 </body>

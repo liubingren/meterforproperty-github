@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../../img/bt_logo.png">
+    <title>智慧能源管理平台-分时电量分析</title>
+</head>
+<body>
+<div id="electric_analysis" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper" v-cloak>
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">用电分析</breadcrumb-item>
+                <breadcrumb-item type="primary">分时电量分析</breadcrumb-item>
+                <breadcrumb-item type="primary">
+                    <span class="content-group">
+                        <span :class="{unselected:timeType!=='date'}" style="margin-right:10px"
+                              data-type="date" data-typeid="1" @click="toggleTimeType($event)">日</span>
+                        <span :class="{unselected:timeType!=='month'}"
+                              data-type="month" data-typeid="2" @click="toggleTimeType($event)">月</span>
+                    </span>
+                </breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title">
+                    <i class="analysis-icon"></i>分时电量分析
+                </div>
+                <div class="content-wrapper">
+                    <!--dom树-->
+                    <div class="tree-wrapper">
+                            <!--树形控件-->
+                            <vrg-tree @father-event="getSonData($event)"></vrg-tree>
+                    </div>
+                    <!--表格-->
+                    <div class="main-content">
+                        <div class="select-group">
+                            <label>产品类型：</label>
+                            <i-select size="large" placeholder="请选择产品类型" v-model="productType_selected" @on-change="getProductTypeSelectVal($event)" style="width:150px;margin-right: 15px;margin-bottom: 10px;">
+                                <i-option v-for="item in productType" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+                            </i-select>
+                            <label>用电类型：</label>
+                            <i-select size="large"  placeholder="请选择用电类型" v-model="electricity_use_selected" @on-change="getElectricTypeSelectVal($event)" style="width:150px;margin-right: 15px;margin-bottom: 10px;">
+                                <i-option v-for="item in electricityUseType" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+                            </i-select>
+                            <label>电表编号：</label>
+                            <i-select size="large" placeholder="请选择电表编号" :clearable="true" v-model="meter_number_selected" filterable ref="selectNumber" style="width:220px;margin-right: 15px;margin-bottom: 10px;"> 
+                                <i-option v-for="item in meterNumberType" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+                            </i-select>
+                            <label>时间：</label>
+                            <date-picker size="large" :type="datetimeType"
+                                        :value="selectTime"  placeholder="请选择时间"
+                                        style="width:150px;margin-right: 10px;margin-bottom: 10px;" @on-change="handleChange($event)">
+                            </date-picker>
+                            <i-button type="primary" @click="getAnalysisData()">查询</i-button>
+                        </div>
+                        <div id="showEchart" class="showEchart"></div>
+                        <div class="showEchart1">
+                            <!-- 对比分析 -->
+                            <div id="showEchart1" class="showEchartItem"></div>
+                            <!-- 构成分析 -->
+                            <div id="showEchart2" class="showEchartItem"></div>
+                        </div>
+                    </div>
+                </div>
+            </i-content>
+        </layout>
+    </layout> 
+</div>
+<script src="../../js/time_sharing_analysis.js"></script>
+</body>
+</html>

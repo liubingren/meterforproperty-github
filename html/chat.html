@@ -1,0 +1,27 @@
+<!doctype html>
+
+<head>
+  <title>www.hangjing.net.cn</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script type="text/javascript" src="../js/chat.js"></script>
+</head>
+
+<body  onload="onloaded()">
+  <p>电梯监控对讲控制</p>
+  <input type="button" name="login" value="Log In" onclick="login()">
+  <input type="button" name="chatCommand" value="Chat Command" onclick="chatCommand()">
+  <input type="button" name="chatEnd" value="Chat End" onclick="chatEnd()">
+  <input type="button" name="adCommand" value="AD Command" onclick="adCommand()">
+  <input type="button" name="avCommand" value="AV Command" onclick="avCommand()">
+  <input type="button" name="usrList" value="User list" onclick="usrList()">
+  <p>本机用户名： <input type="text" id="localname" name="local_name" maxlength="8" >  远程用户名： <input type="text" id="remotename" name="remote_name" maxlength="8"  >                       </p>
+  <div>
+    <iframe src="https://120.78.219.209/index.html" width=800px height=700px  id="chat"  name="mychat">  </iframe>
+  </div>
+  <input type="text" id="list"  maxlength="40"   style="width:500px; height:20px;" >
+
+
+
+</body>
+
+</html>

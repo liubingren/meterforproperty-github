@@ -1,4 +1,4 @@
-import { Vue, HEADER, axios, hidePage } from './general.js'
+import { Vue, HEADER, axios, hidePage, isShowBtn} from './general.js'
 import '../css/electrical.less'
 
 let edVM = new Vue({
@@ -45,7 +45,7 @@ let edVM = new Vue({
     // 获取树形图子组件数据
     getSonData(e) {
       this.location_id = e
-      if(this.metertypeid == '4'){
+      if(this.metertypeid == '5'){
         this.getStatistics()
         }else{
         this.getElectricaltData(1)
@@ -187,16 +187,23 @@ let edVM = new Vue({
       this.meterType = e.target.getAttribute('data-type')
       this.metertypeid = e.target.getAttribute('data-typeid')
       this.keywords = ''
-      if(this.metertypeid == '4'){
+      if(this.metertypeid == '5'){
       this.getStatistics()
       }else{
       this.getElectricaltData(1)
       }
+
+      setTimeout(() =>{
+        isShowBtn()
+    },100)
     },
     //分页
     pageInfor(e) {
       this.pageCurrent = e
       this.getElectricaltData(this.pageCurrent)
+      setTimeout(() =>{
+        isShowBtn()
+    },100)
     },
     //提示框
     instance(type, contentData) {

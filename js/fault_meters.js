@@ -1,6 +1,7 @@
 import {
   Vue, iView, axios,
-  HEADER, hidePage
+  HEADER, hidePage,
+  isShowBtn
 } from './general.js'
 
 import '../css/fault_meters.less'
@@ -33,7 +34,7 @@ let faultMetersVM = new Vue({
       }
       axios({
         method: 'post',
-        url: HEADER + '/faultMeter/update_confirmFaultMeters.do',
+        url: HEADER + '/faultMeter/detection_confirmFaultMeters.do',
         params: {
           ids: id
         }
@@ -107,6 +108,7 @@ let faultMetersVM = new Vue({
     this.getFaultMeters()
     window.onload = () => {
       hidePage(this.allRow)
+      isShowBtn()
     }
   }
 })

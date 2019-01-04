@@ -14,7 +14,7 @@
     height: 32px;
     top: 25px;
     left: 35px;
-    background: url("../img/structure_icon.png") no-repeat;
+    background: url("../img/wastage_icon.png") no-repeat;
   }
 }
 
@@ -133,118 +133,73 @@
     .chart-wrapper {
       height: 89%;
     }
-    // 右键菜单
-    .right-menu {
-      position: absolute;
-      top: 0;
-      left: 0;
-      text-align: center;
-      min-width: 100px !important;
-      cursor: pointer;
-      will-change: top, left;
-      .poptip-item {
-        div {
-          border-radius: 4px;
-          padding: 5px 0;
-          &:hover {
-            background-color: #5cadff;
-            color: #fff;
-          }
-        }
+
+  }
+}
+
+// 右键菜单
+.right-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+  min-width: 100px !important;
+  cursor: pointer;
+  will-change: top, left;
+  .poptip-item {
+    div {
+      border-radius: 4px;
+      padding: 5px 0;
+      &:hover {
+        background-color: #5cadff;
+        color: #fff;
       }
     }
   }
 }
 
-.in-tr {
-  position: absolute;
-  top: 0;
-  left: 0;
+// 弹窗样式
+.add-modal {
+  div {
+    font-size: 14px;
+  }
+  .modal-header {
+    font-size: 16px;
+  }
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 58%;
+    margin: 15px auto;
+    line-height: 32px;
+    > div {
+      width: 200px;
+      .electric-price, .init-price {
+        width: 160px;
+      }
+    }
+    .current-unit {
+      width: 200px;
+      background-color: #bbbec4;
+      border-radius: 4px;
+      text-indent: 10px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    span {
+      position: absolute;
+      left: -7px;
+      color: #ed3f14;
+    }
+  }
+  .code-wrapper {
+    position: relative;
+    .meter-code {
+      position: absolute;
+      left: 100px;
+    }
+  }
 }
 
-//table {
-//  margin: 0 auto 30px;
-//  width: 90%;
-//  border-spacing: 0;
-//  border-collapse: collapse;
-//  text-align: center;
-//  thead {
-//    background-color: #dfeffe;
-//    font-size: 16px;
-//    tr {
-//      height: 50px;
-//      th {
-//        &:first-of-type {
-//          padding-left: 10px;
-//        }
-//        &:last-of-type {
-//          position: relative;
-//          .add-meter {
-//            margin: 5px 20px 0 0;
-//            color: #2d8cf0;
-//            font-size: 20px;
-//            cursor: pointer;
-//          }
-//        }
-//        &.price-unit {
-//          position: relative;
-//          span {
-//            position: absolute;
-//            width: 40px;
-//            font-size: 12px;
-//            color: #80848f;
-//            bottom: 0;
-//            right: 50%;
-//            -webkit-transform: translateX(50%);
-//            -moz-transform: translateX(50%);
-//            -ms-transform: translateX(50%);
-//            -o-transform: translateX(50%);
-//            transform: translateX(50%);
-//          }
-//        }
-//      }
-//    }
-//  }
-//  tbody {
-//    position: relative;
-//    font-size: 16px;
-//    tr {
-//      height: 40px;
-//      &:nth-of-type(2n) {
-//        background: #f9f9fb;
-//      }
-//      td {
-//        max-width: 70px;
-//        overflow: hidden;
-//        white-space: nowrap;
-//        -ms-text-overflow: ellipsis;
-//        text-overflow: ellipsis;
-//        &:first-of-type {
-//          padding-left: 10px;
-//        }
-//        .fold-td {
-//          width: 25px;
-//          height: 25px;
-//          line-height: 25px;
-//          margin-top: 7px;
-//          background: none;
-//          border: none;
-//          font-size: 25px;
-//          color: #2d8cf0;
-//          cursor: pointer;
-//        }
-//        div {
-//          height: 26px;
-//          line-height: 26px;
-//          font-size: 14px;
-//          text-indent: 1em;
-//          .under {
-//            height: 21px;
-//            margin-top: 0;
-//            font-size: 20px;
-//          }
-//        }
-//      }
-//    }
-//  }
-//}

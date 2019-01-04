@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<link rel="icon" type="image/png" href="../img/bt_logo.png">
+    <title>智慧能源管理平台-系统管理</title>
+</head>
+<body>
+<div id="role-manage" class="page-rout" v-cloak>
+    <meter-header></meter-header>
+    <layout class="ivu-layout-has-sider">
+        <meter-sider></meter-sider>
+        <layout class="page-wrapper">
+            <breadcrumb class="page-title">
+                <breadcrumb-item type="primary">系统管理</breadcrumb-item>
+                <breadcrumb-item type="primary">
+                    <span class="content-group">
+                        <span data-type="role" @click="toggleTab($event)"
+                              :class="{unselected:whichTab!=='role'}"
+                              v-if="isShowTab==='rm'">角色管理</span>
+                        <span data-type="per" @click="toggleTab($event)"
+                              :class="{unselected:whichTab!=='per'}"
+                              v-if="isShowTab1==='pm'">权限管理</span>
+                        <span data-type="res" @click="toggleTab($event)"
+                              :class="{unselected:whichTab!=='res'}"
+                              v-if="isShowTab2==='res'">资源管理</span>
+                        <span data-type="rpm" @click="toggleTab($event)"
+                              :class="{unselected:whichTab!=='rpm'}"
+                              v-if="isShowTab3==='rpm'">角色权限管理</span>
+                    </span>
+                </breadcrumb-item>
+            </breadcrumb>
+            <i-content class="page-body">
+                <!--判断显示内容标题-->
+                <div class="content-title" v-cloak>
+                    <div v-show="whichTab==='role'">
+                        <i class="role-icon"></i>
+                        角色管理
+                    </div>
+                    <div v-show="whichTab==='per'">
+                        <i class="per-icon"></i>
+                        权限管理
+                    </div>
+                    <div v-show="whichTab==='res'">
+                        <i class="res-icon"></i>
+                        资源管理
+                    </div>
+                    <div v-show="whichTab==='rpm'">
+                        <i class="role-per-icon"></i>
+                        角色权限管理
+                    </div>
+                </div>
+
+                <div class="content-wrapper">
+                    <div class="tree-wrapper"
+                         v-show="whichTab==='per'||whichTab==='res'">
+                        <!--树形控件-->
+                        <Tree :data="treeData"
+                              @on-select-change="getNodeId($event)"></Tree>
+                    </div>
+                    <div class="main-content">
+
+                        <!--角色管理表格-->
+                        <table v-if="whichTab==='role'">
+                            <thead>
+                            <tr>
+                                <th>角色名称</th>
+                                <th>角色名称值</th>
+                                <th>备注</th>
+                                <th>操作</th>
+                                <th>
+                                    <Icon class="add-meter role-add"
+                                          type="plus" title="添加角色"
+                                          @click="openModal(1)"></Icon>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(item,index) of rm.roles" :key="index">
+                                <td>{{item.rname}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.remark}}</td>
+                                <td class="operation-td">
+                                    <i-button type="ghost" class="role-update"
+                                              @click="openModal(0,item.id,index)">
+                                        编辑
+                                    </i-button>
+                                    <i-button type="ghost" class="role-delete"
+                                              @click="deleteModal(item.id)">
+                                        删除
+                                    </i-button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <!--权限管理表格-->
+                        <table v-if="whichTab==='per'">
+                            <thead>
+                            <tr>
+                                <th>模块名称</th>
+                                <th>权限名称</th>
+                                <th>权限名称值</th>
+                                <th>操作</th>
+                                <th>
+                                    <Icon class="add-meter permission-add"
+                                          type="plus" title="添加权限"
+                                          @click="openModal(1)"></Icon>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(item,index) of pm.perList" :key="index">
+                                <td>{{item.modelname}}</td>
+                                <td>{{item.operatingname}}</td>
+                                <td>{{item.operating}}</td>
+                                <td class="operation-td">
+                                    <i-button type="ghost" class="permission-update"
+                                              @click="openModal(0,item.id,index)">
+                                        编辑
+                                    </i-button>
+                                    <i-button type="ghost" class="permission-delete"
+                                              @click="deleteModal(item.id)">
+                                        删除
+                                    </i-button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <!--资源管理表格-->
+                        <table v-if="whichTab==='res'">
+                            <thead>
+                            <tr>
+                                <th>顺序编号</th>
+                                <th>资源名称</th>
+                                <th>模块名称值</th>
+                                <th>资源URL</th>
+                                <th>父菜单</th>
+                                <th>操作</th>
+                                <th>
+                                    <Icon type="plus" class="add-meter resources-add"
+                                          title="添加权限"
+                                          @click="openModal(1)"></Icon>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(item,index) of res.resList" :key="index">
+                                <td>{{item.number}}</td>
+                                <td :title="item.name">
+                                    {{item.name}}
+                                </td>
+                                <td :title="item.model">
+                                    {{item.model}}
+                                </td>
+                                <td :title="item.url">
+                                    {{item.url}}
+                                </td>
+                                <td :title="item.parentname">
+                                    {{item.parentname}}
+                                </td>
+                                <td class="operation-td">
+                                    <i-button type="ghost" class="resources-update"
+                                              @click="openModal(0,item.id,index)">
+                                        编辑
+                                    </i-button>
+                                    <i-button type="ghost" class="resources-delete"
+                                              @click="deleteModal(item.id)">
+                                        删除
+                                    </i-button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <!--角色权限管理-->
+                        <div v-if="whichTab==='rpm'" class="rpm-wrapper">
+                            <div class="select-wrapper">
+                                角色名称:
+                                <i-select class="select-role"
+                                          v-model="rpm.selectedRole"
+                                          @on-change="getSelectedRole(rpm.selectedRole)">
+                                    <i-option v-for="item of rpm.roleNames"
+                                              :value="item.id" :key="item.id">
+                                        {{item.rname}}
+                                    </i-option>
+                                </i-select>
+                            </div>
+                            <div class="rpm-card">
+                                <div class="card-title">角色权限管理列表</div>
+                                <ul class="card-body">
+                                    <!--一级模块层级-->
+                                    <li v-for="(mod,index) of rpm.rpmList"
+                                        :key="mod.name"
+                                        :class="{'meter-manage-list':mod.name==='电表管理'}">
+                                        <Checkbox size="large" v-model="mod.checked"
+                                                  @on-change="getAllChecked($event,index)">
+                                            {{mod.name}}
+                                        </Checkbox>
+                                        <ul v-if="mod.children.length">
+                                            <!--二级页面层级-->
+                                            <li v-for="page of mod.children"
+                                                :key="page.name"
+                                                :class="[
+                                                {'two-children':mod.children.length===2},
+                                                {'three-children':mod.children.length===3}]">
+                                                <Checkbox v-model="page.checked"
+                                                          @on-change="getPageChecked($event,page.name)">
+                                                    {{page.name}}
+                                                </Checkbox>
+                                                <ul class="rp-list">
+                                                    <li v-for="per of page.permissions">
+                                                        <Checkbox v-model="per.checked"
+                                                                  @on-change="getCheckboxes(
+                                                                    $event,per.permissionid)">
+                                                            {{per.operatingname}}
+                                                        </Checkbox>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                        <ul v-else class="first-rpl">
+                                            <li v-for="per of mod.permissions">
+                                                <Checkbox v-model="per.checked"
+                                                          @on-change="getCheckboxes(
+                                                          $event,per.permissionid)">
+                                                    {{per.operatingname}}
+                                                </Checkbox>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <i-button class="submit-per permissionRole-update" size="large"
+                                          type="primary" @click="submitPer()">
+                                    确认
+                                </i-button>
+                            </div>
+                        </div>
+                        
+                        <Page class="page-bar" v-if="whichTab==='res'" :total="res.resTotalPage" :current="res.resCurrentPage" @on-change="getCurrentPage('RES',$event)"
+                            show-elevator show-total/>
+
+                        <!-- <Page class="page-bar"
+                              :total="allRow"
+                              @on-change="getCurrentPage($event)"
+                              show-elevator show-total></Page> -->
+                    </div>
+                </div>
+            </i-content>
+        </layout>
+    </layout>
+
+    <!--添加/编辑弹窗-->
+    <modal class="role-modal" v-model="addModal"
+           :mask-closable="false" :loading="modelLoading"
+           @on-ok="submitRole()">
+
+        <!--角色管理-->
+        <div slot="header" class="modal-header"
+             v-show="whichTab==='role'">
+            <p v-if="isAddModal">添加角色</p>
+            <p v-else>编辑角色</p>
+        </div>
+        <div v-show="whichTab==='role'">
+            <div class="input-wrapper">
+                <span>*</span>角色名称:
+                <i-input v-model="rm.roleName" autofocus
+                         @on-blur="noEmpty(rm.roleName)"></i-input>
+            </div>
+            <div class="input-wrapper">
+                <span>*</span>角色名称值:
+                <i-input v-model="rm.roleValue"
+                         @on-blur="noEmpty(rm.roleValue)"></i-input>
+            </div>
+            <div class="input-wrapper">
+                备注:
+                <i-input v-model="rm.remark"></i-input>
+            </div>
+        </div>
+
+        <!--权限管理-->
+        <div slot="header" class="modal-header"
+             v-show="whichTab==='per'">
+            <p v-if="isAddModal">新建权限</p>
+            <p v-else>编辑权限</p>
+        </div>
+        <div v-show="whichTab==='per'">
+            <div class="input-wrapper">
+                <span>*</span>模块名称:
+                <i-input :value="pm.modelName"
+                         disabled></i-input>
+            </div>
+            <div class="input-wrapper">
+                <span>*</span>权限名称:
+                <i-select class="per-name" v-model="pm.perValue"
+                          id="per-name"
+                          @on-change="getSelectPer($event)">
+                    <i-option v-for="item of pm.modalPerList"
+                              :key="item.id" :value="item.value">
+                        {{item.name}}
+                    </i-option>
+                </i-select>
+            </div>
+            <div class="input-wrapper">
+                <span>*</span>权限名称值:
+                <i-input :value="pm.perValue" disabled
+                         @on-blur="noEmpty(pm.perValue)"></i-input>
+            </div>
+        </div>
+
+        <!--资源管理-->
+        <div slot="header" class="modal-header"
+             v-show="whichTab==='res'">
+            <p v-if="isAddModal">添加资源</p>
+            <p v-else>编辑资源</p>
+        </div>
+        <div v-show="whichTab==='res'">
+            <div class="input-wrapper">
+                <span>*</span>父菜单
+                <i-input :value="res.pName"
+                         disabled></i-input>
+            </div>
+            <div class="input-wrapper">
+                <span>*</span>资源名称:
+                <i-input v-model="res.resName" autofocus
+                         @on-blur="noEmpty(res.resName)"></i-input>
+            </div>
+            <div class="input-wrapper">
+                <span>*</span>模块名称值:
+                <i-input v-model="res.mValue"
+                         @on-blur="noEmpty(res.mValue)"></i-input>
+            </div>
+            <div class="input-wrapper">
+                <span>*</span>资源URL:
+                <i-input v-model="res.rUrl"
+                         @on-blur="noEmpty(res.rUrl)"></i-input>
+            </div>
+            <div class="input-wrapper">
+                <span>*</span>顺序编号:
+                <i-input v-model="res.resIndex"
+                         @on-blur="isInt(res.resIndex)"></i-input>
+            </div>
+        </div>
+    </modal>
+</div>
+
+<script src="../js/system_manage.js"></script>
+</body>
+</html>

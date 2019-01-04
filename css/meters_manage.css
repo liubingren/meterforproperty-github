@@ -1,0 +1,209 @@
+.page-body .content-title {
+  position: relative;
+  height: 80px;
+  line-height: 80px;
+  font-size: 16px;
+  font-weight: bold;
+  text-indent: 70px;
+  background-color: #fff;
+  border-radius: 4px;
+  margin-bottom: 1px;
+}
+.page-body .content-title i {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  top: 25px;
+  left: 35px;
+}
+.page-body .content-title i.public-icon {
+  background: url("../img/public_meter.png") no-repeat;
+}
+.page-body .content-title i.user-icon {
+  background: url("../img/user_meter.png") no-repeat;
+}
+.page-body .content-title i.pre-pay-icon {
+  background: url("../img/pre_pay_meter.png") no-repeat;
+}
+.page-body .content-title i.meters-statistics {
+  background: url("../img/meters_statistics.png") no-repeat;
+}
+.page-body .content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  min-height: 622px;
+}
+.page-body .content-wrapper .tree-wrapper {
+  min-width: 260px;
+  max-width: 260px;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 4px;
+  margin-right: 1px;
+}
+.page-body .content-wrapper .tree-wrapper .search-area {
+  margin-bottom: 25px;
+}
+.page-body .content-wrapper .tree-wrapper .search-area input {
+  height: 38px;
+}
+.page-body .content-wrapper .tree-wrapper .area-tree {
+  max-height: 630px;
+  overflow-y: scroll;
+}
+.page-body .content-wrapper .main-content {
+  width: 100%;
+  background-color: #fff;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.page-body .content-wrapper .main-content .btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  justify-content: space-evenly;
+}
+.page-body .content-wrapper .main-content .btn-group input,
+.page-body .content-wrapper .main-content .btn-group > button,
+.page-body .content-wrapper .main-content .btn-group > div {
+  height: 40px;
+}
+.page-body .content-wrapper .main-content .btn-group > button {
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+.page-body .content-wrapper .main-content .btn-group .input-community {
+  width: 200px;
+}
+.page-body .content-wrapper .main-content .btn-group .input-community div {
+  height: 40px;
+}
+.page-body .content-wrapper .main-content .btn-group .input-community span {
+  line-height: 40px;
+}
+.page-body .content-wrapper .main-content .btn-group .select-meters {
+  width: 100px;
+  font-size: 14px;
+}
+.page-body .content-wrapper .main-content .btn-group .select-meters div {
+  height: 40px;
+}
+.page-body .content-wrapper .main-content .btn-group .select-meters span {
+  line-height: 40px;
+}
+.page-body .content-wrapper .main-content .btn-group .search-meters {
+  width: 200px;
+  margin-bottom: 30px;
+}
+.page-body .content-wrapper .main-content .statistics-group {
+  justify-content: flex-start;
+  font-size: 14px;
+}
+.page-body .content-wrapper .main-content .statistics-group .select-community {
+  margin: 0 30px 30px;
+}
+.page-body .content-wrapper .main-content .statistics-group .select-community div {
+  width: 180px;
+  height: 40px;
+  display: inline-block;
+}
+.page-body .content-wrapper .main-content .statistics-group .select-community div span {
+  line-height: 40px;
+}
+.page-body .content-wrapper .main-content table {
+  margin: 0 auto 30px;
+  width: 96%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  text-align: center;
+}
+.page-body .content-wrapper .main-content table thead {
+  background-color: #dfeffe;
+  font-size: 16px;
+}
+.page-body .content-wrapper .main-content table thead tr {
+  height: 50px;
+}
+.page-body .content-wrapper .main-content table thead tr th:first-of-type {
+  padding-left: 10px;
+}
+.page-body .content-wrapper .main-content table thead tr th:last-of-type {
+  position: relative;
+}
+.page-body .content-wrapper .main-content table thead tr th:last-of-type .add-meter {
+  margin: 5px 20px 0 0;
+  color: #2d8cf0;
+  font-size: 20px;
+  cursor: pointer;
+}
+.page-body .content-wrapper .main-content table thead tr th.price-unit {
+  position: relative;
+}
+.page-body .content-wrapper .main-content table thead tr th.price-unit span {
+  position: absolute;
+  width: 40px;
+  font-size: 12px;
+  color: #80848f;
+  bottom: 0;
+  right: 50%;
+  -webkit-transform: translateX(50%);
+  -moz-transform: translateX(50%);
+  -ms-transform: translateX(50%);
+  -o-transform: translateX(50%);
+  transform: translateX(50%);
+}
+.page-body .content-wrapper .main-content table tbody {
+  font-size: 14px;
+}
+.page-body .content-wrapper .main-content table tbody tr {
+  height: 40px;
+}
+.page-body .content-wrapper .main-content table tbody tr:nth-of-type(2n) {
+  background: #f9f9fb;
+}
+.page-body .content-wrapper .main-content table tbody tr td:not(.operation-td) {
+  max-width: 70px;
+  overflow: hidden;
+  white-space: nowrap;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+.page-body .content-wrapper .main-content table tbody tr td:not(.operation-td):first-of-type {
+  padding-left: 10px;
+}
+@media (max-width: 1450px) {
+  .page-body .content-wrapper .main-content table thead {
+    font-size: 14px;
+  }
+  .page-body .content-wrapper .main-content table tbody {
+    font-size: 12px;
+  }
+}
+.add-meter-modal div {
+  font-size: 14px;
+}
+.add-meter-modal .modal-header {
+  font-size: 16px;
+}
+.add-meter-modal .input-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 62%;
+  margin: 15px auto;
+  line-height: 32px;
+}
+.add-meter-modal .input-wrapper > div {
+  width: 200px;
+}
+.add-meter-modal .input-wrapper > div .electric-price,
+.add-meter-modal .input-wrapper > div .init-price {
+  width: 160px;
+}
+.add-meter-modal .code-wrapper {
+  position: relative;
+}
+.add-meter-modal .code-wrapper .meter-code {
+  position: absolute;
+  left: 100px;
+}

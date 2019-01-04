@@ -1,0 +1,210 @@
+
+.page-body {
+    .content-title {
+      position: relative;
+      height: 80px;
+      line-height: 80px;
+      font-size: 16px;
+      font-weight: bold;
+      text-indent: 70px;
+      background-color: #fff;
+      border-radius: 4px;
+      margin-bottom: 1px;
+      i {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        top: 25px;
+        left: 35px;
+        &.analysis-icon {
+          background: url("../img/analysis.png") no-repeat;
+        }
+      }
+    }
+    .content-wrapper {
+      display: flex;
+      justify-content: space-between;
+      min-height: 700px;
+      margin-bottom: 25px;
+      .tree-wrapper {
+        min-width: 260px;
+        max-width: 260px;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 4px;
+        margin-right: 1px;
+        .area-tree {
+          max-height: 630px;
+          overflow-y: scroll;
+        }
+        .search-area {
+          margin-bottom: 25px;
+        }
+      }
+      .main-content {
+        width: 100%;
+        background-color: #fff;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        .select-group {
+          display: flex;
+          flex-wrap: wrap;
+          margin: 30px auto ;
+          width: 96%;
+          justify-content: flex-start;
+          position: relative;
+          align-items: center;
+          label{
+            margin-bottom: 10px;
+         }
+          button{
+              margin-bottom: 10px;
+              margin-left: 20px;
+          }
+        }
+        @media (max-width: 1368px) {
+            .select-group {
+                label{
+                    display: none;
+                }
+            }
+        }
+        .showEchart{
+            width: 75%;
+            margin: auto;
+            height: 400px;
+        }
+        .showEchart1{
+          width: 80%;
+          margin: auto;
+          height: 450px;
+          display: flex;
+          justify-content: flex-start;
+          margin-top: 50px;
+          .showEchartItem{
+            width: 50%;
+            height: 100%;
+          }
+      }
+        table {
+            margin: 30px auto;
+            width: 80%;
+            border-spacing: 0;
+            border-collapse: collapse;
+            text-align: center;
+            thead {
+              background-color: #dfeffe;
+              font-size: 16px;
+              tr {
+                height: 50px;
+                th {
+                  &:first-of-type {
+                    padding-left: 10px;
+                  }
+                  &:last-of-type {
+                    position: relative;
+                    .add-meter {
+                      margin: 5px 20px 0 0;
+                      color: #2d8cf0;
+                      font-size: 20px;
+                      cursor: pointer;
+                    }
+                  }
+                  &.item-unit {
+                    position: relative;
+                    span {
+                      position: absolute;
+                      width: 40px;
+                      font-size: 12px;
+                      color: #80848f;
+                      bottom: 0;
+                      right: 50%;
+                      -webkit-transform: translateX(50%);
+                      -moz-transform: translateX(50%);
+                      -ms-transform: translateX(50%);
+                      -o-transform: translateX(50%);
+                      transform: translateX(50%);
+                    }
+                  }
+                }
+              }
+            }
+            tbody {
+              font-size: 14px;
+              color: #80848f;
+              tr {
+                height: 40px;
+              }
+              tr:nth-child(2n){
+                background-color: #f9f9fb;
+              }
+            }
+          }
+          .messageList{
+            margin-bottom: 10px;
+            border-top:2px solid  #dfeffe;
+            border-bottom:2px solid  #dfeffe;
+            th{
+              color: #333;
+              font-size: 14px;
+            }
+            tr{
+              th{
+                width: 25%
+              }
+              td{
+                width: 25%
+              }
+            }
+
+          }
+          .explain{
+            margin: 0 auto 30px;
+            width: 80%;
+            color: #495060;
+            span{
+              color: #ED3F14
+            }
+          }
+      }
+      .colorRed{
+        color: red;
+      }
+    }
+  }
+  
+  // 弹窗样式
+  .add-meter-modal {
+    div {
+      font-size: 14px;
+    }
+    .modal-header {
+      font-size: 16px;
+    }
+    .input-wrapper {
+      display: flex;
+      justify-content: space-between;
+      width: 62%;
+      margin: 15px auto;
+      line-height: 32px;
+      > div {
+        width: 200px;
+        .electric-price, .init-price {
+          width: 160px;
+        }
+      }
+    }
+    .code-wrapper {
+      position: relative;
+      .meter-code {
+        position: absolute;
+        left: 100px;
+      }
+    }
+  }
+  
+  .page-bar{
+    display: none;
+    justify-content: center;
+  }

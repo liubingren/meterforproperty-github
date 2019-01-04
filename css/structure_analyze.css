@@ -1,0 +1,42 @@
+.page-body .content-title {
+  position: relative;
+  height: 80px;
+  line-height: 80px;
+  font-size: 16px;
+  font-weight: bold;
+  text-indent: 70px;
+  background-color: #fff;
+  border-radius: 4px;
+  margin-bottom: 1px;
+}
+.page-body .content-title i {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  top: 25px;
+  left: 35px;
+  background: url("../img/structure_icon.png") no-repeat;
+}
+.page-body .content-wrapper {
+  min-height: 625px;
+  background: #fff;
+  padding-top: 30px;
+}
+.page-body .content-wrapper .btn-group {
+  display: flex;
+  justify-content: space-evenly;
+  width: 80%;
+  margin: 0 auto 30px;
+  line-height: 32px;
+}
+.page-body .content-wrapper .btn-group > div {
+  width: 100px;
+  margin-right: 20px;
+  margin-left: 10px;
+}
+.page-body .content-wrapper .btn-group > div.date-picker {
+  min-width: 106px;
+}
+.page-body .content-wrapper #chart-wrapper {
+  height: 660px;
+}

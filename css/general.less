@@ -7,11 +7,13 @@ body {
 
 header {
   height: 70px;
+  display: flex;
+  flex-flow: row;
   .layout-logo {
     width: @logoAndSiderWidth;
     height: 100%;
     background: #2d8cf0;
-    float: left;
+    // float: left;
     color: #fff;
     font-weight: bold;
     font-size: 18px;
@@ -31,13 +33,14 @@ header {
   }
   > .nav-ul {
     display: flex;
-    justify-content: space-evenly;
+    width:calc(~"100% - @{logoAndSiderWidth}"); 
     height: 100%;
-    margin-left: 200px;
-    padding: 0 30px;
+    padding: 0 20px;
     font-size: 16px;
     > li {
-      min-width: 88px;
+      flex-grow: 1;
+      min-width: 130px;
+      max-width: 130px;
       padding: 0 !important;
       text-align: center;
       font-size: 16px;
@@ -63,6 +66,16 @@ header {
         }
       }
     }
+    >li.hide{
+      display: none;
+    }
+  }
+  .right,.left{
+    height: 70px;
+    line-height: 70px;
+    text-align: center;
+    width: 20px;
+    background: #ffffff;
   }
 }
 
@@ -83,7 +96,12 @@ header {
         height: 80px;
         margin: 40px auto 20px;
         border-radius: 50%;
-        background-color: #fff;
+        //background-color: #fff;
+        background-image: url("../img/man.png");
+        background-size: 100%, 100%
+      }
+      .woman-avatar {
+        background-image: url("../img/woman.png");
       }
     }
     .user-btn-group {
@@ -158,4 +176,72 @@ header {
 
 ul {
   list-style: none;
+}
+
+//个人设置框垂直居中
+.vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .ivu-modal {
+    top: 0;
+  }
+}
+
+//弹框内部样式
+.set-modal {
+  .ivu-modal-body {
+    display: flex;
+    flex-direction: column;
+    color: #80848f;
+    margin: 30px 0;
+    .input-bar {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+      span {
+        display: inline-block;
+        width: 75px;
+        i {
+          color: red;
+          margin-right: 8px;
+        }
+      }
+      .ivu-input-wrapper, label {
+        width: 200px;
+      }
+      label {
+        font-size: 14px;
+        color: #202020;
+      }
+    }
+  }
+}
+
+.abnormalMeter-add, .abnormalMeter-mark, .abnormalMeter-delete, .abnormalMeter-check, .abnormalMeter-import, .abnormalMeter-export,
+.abnormalMeterOrders-add, .abnormalMeterOrders-mark, .abnormalMeterOrdersr-delete, .abnormalMeterOrders-check, .abnormalMeterOrders-import, .abnormalMeterOrders-export,
+.bigScreen-add, .bigScreen-update, .bigScreen-delete, .bigScreen-check, .bigScreen-import, .bigScreen-export,
+.energyCurrentAnalysis-add, .energyCurrentAnalysis-update, .energyCurrentAnalysis-delete, .energyCurrentAnalysis-check, .energyCurrentAnalysis-import, .energyCurrentAnalysis-export,
+.energyStructureAnalysis-add, .energyStructureAnalysis-update, .energyStructureAnalysis-delete, .energyStructureAnalysis-check, .energyStructureAnalysis-import, .energyStructureAnalysis-export,
+.energyWasteAnalysis-add, .energyWasteAnalysis-update, .energyWasteAnalysis-delete, .energyWasteAnalysis-check, .energyWasteAnalysis-import, .energyWasteAnalysis-export,
+.faultMeter-add, .faultMeter-detection, .faultMeter-delete, .faultMeter-check, .faultMeter-import, .faultMeter-export,
+.home-add, .home-update, .home-delete, .home-check, .home-import, .home-export,
+.location-add, .location-update, .location-delete, .location-check, .location-import, .location-export,
+.log-add, .log-update, .log-delete, .log-check, .log-import, .log-export,
+.login-add, .login-update, .login-delete, .login-check, .login-import, .login-export,
+.meter-add, .meter-update, .meter-delete, .meter-check, .meter-import, .meter-export, .meter-nowrm, .meter-monthrm, .meter-importupdate, .meter-templatedown, .meter-bindingmeter, .meter-untiedmeter,
+.meterData-add, .meterData-update, .meterData-delete, .meterData-check, .meterData-import, .meterData-export,
+.meterOrders-add, .meterOrders-update, .meterOrders-delete, .meterOrders-check, .meterOrders-import, .meterOrders-export,
+.onLineMeter-add, .onLineMeter-update, .onLineMeter-delete, .onLineMeter-check, .onLineMeter-import, .onLineMeter-export,
+//.permission-add, .permission-update, .permission-delete, .permission-check, .permission-import, .permission-export,
+//.permissionRole-add, .permissionRole-update, .permissionRole-delete, .permissionRole-check, .permissionRole-import, .permissionRole-export,
+//.resources-add, .resources-update, .resources-delete, .resources-check, .resources-import, .resources-export,
+//.resourcesRole-add, .resourcesRole-update, .resourcesRole-delete, .resourcesRole-check, .resourcesRole-import, .resourcesRole-export,
+//.role-add, .role-update, .role-delete, .role-check, .role-import, .role-export,
+.user-add, .user-update, .user-delete, .user-check, .user-import, .user-export,
+.userRole-add, .userRole-update, .userRole-delete, .userRole-check, .userRole-import, .userRole-export {
+  display: none !important;
 }

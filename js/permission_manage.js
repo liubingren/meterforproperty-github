@@ -17,7 +17,7 @@ let onlineManageVM = new Vue({
     perName: '',
     perValue: '',
     emptyNum: [1, 1],
-    perId: ''
+    rId: ''
   },
   methods: {
     // 删除
@@ -62,7 +62,7 @@ let onlineManageVM = new Vue({
       }
       else {
         this.isAddModal = false
-        this.perId = id
+        this.rId = id
         this.modelName = this.perArr[index].rname
         this.perName = this.perArr[index].name
         this.perValue = this.perArr[index].perValue
@@ -91,7 +91,7 @@ let onlineManageVM = new Vue({
       // 如果是编辑
       if (!this.isAddModal) {
         url = HEADER + '/role/update_Role.do'
-        params.id = this.perId
+        params.id = this.rId
       }
       // 如果全部不为空
       if (this.emptyNum.length === 0) {

@@ -4,6 +4,7 @@
   "description": "",
   "main": "general.js",
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "parcel-bundler": "^1.8.1",
     "vue-hot-reload-api": "^2.3.0"
   },
@@ -11,7 +12,8 @@
     "@vue/component-compiler-utils": "^1.2.1",
     "axios": "^0.18.0",
     "echarts": "^4.1.0",
-    "iview": "^2.14.0",
+    "gulp": "^3.9.1",
+    "iview": "^2.14.3",
     "less": "^3.0.4",
     "stylus": "^0.54.5",
     "vue": "^2.5.16",

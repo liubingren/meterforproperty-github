@@ -1,0 +1,297 @@
+.page-body {
+  .inputedBorder input{
+    border: #2d8cf0 solid 1px !important;
+  }
+  .checkboxChanged{
+    color:#2d8cf0;
+  }
+    .content-title {
+      position: relative;
+      height: 80px;
+      line-height: 80px;
+      font-size: 16px;
+      font-weight: bold;
+      text-indent: 70px;
+      background-color: #fff;
+      border-radius: 4px;
+      margin-bottom: 1px;
+      i {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        top: 25px;
+        left: 35px;
+        &.anomaly-icon {
+          background: url("../img/anomaly_ele.png") no-repeat;
+        }
+        &.user-icon {
+          background: url("../img/user_meter.png") no-repeat;
+        }
+      }
+    }
+    .content-wrapper {
+      display: flex;
+      justify-content: space-between;
+      min-height: 700px;
+      margin-bottom: 25px;
+      .tree-wrapper {
+        min-width: 260px;
+        max-width: 260px;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 4px;
+        margin-right: 1px;
+        .area-tree {
+          max-height: 630px;
+          overflow-y: scroll;
+        }
+        .search-area {
+          margin-bottom: 25px;
+        }
+      }
+      .main-content {
+        width: 100%;
+        background-color: #fff;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        .btn-group {
+          display: flex;
+          flex-wrap: wrap;
+          margin: 14px auto 0;
+          width: 96%;
+          justify-content: flex-start;
+          position: relative;
+          margin-bottom: 10px;
+          .untreated{
+            position: absolute;
+            right: 5px;
+            color: #80848f;
+            font-weight: bold;
+            font-size: 15px;
+  
+          }
+          .time-group{
+            margin-right: 20px;
+            position: relative;
+            margin-bottom: 10px;
+            label{
+              color: #504e4e;
+            }
+            .ivu-icon-search{
+              width: 30px;
+              height: 30px;
+              font-size: 25px;
+              color: #999;
+              position: absolute;
+              top: 5px;
+              right: 5px;
+              z-index: 999;
+              text-align: center;
+              cursor: pointer;
+            }
+          }
+          button{
+            margin-bottom: 30px;
+            margin-right: 20px;
+          }
+          a{
+            margin-bottom: 30px;
+            margin-right: 20px;
+            height: 36px;
+            line-height: 24px;
+          }
+        }
+
+        .table_set{
+          width: 66vw;
+          // width: 1270vm;
+          margin-left: 30px;
+          tr{
+            .operateClm{
+              button{
+                font-size: 14px;
+                color: #fff;
+                padding: 5px 10px;
+                cursor: pointer;
+                background-color: #2d8cf0;
+                border:solid 1px #fff;
+                border-radius: 4px;
+              }
+            }
+            td{
+              input{
+                text-align: center;
+                // width: 80%;
+              }
+            }
+          }
+        }
+
+
+  
+        table {
+          // margin: 0 30px;
+          width: 95%;
+          border-spacing: 0;
+          border-collapse: collapse;
+          text-align: center;
+          thead {
+            background-color: #dfeffe;
+            font-size: 16px;
+            tr {
+              height: 50px;
+              
+              // .td1{
+              //   width: 18%;
+              // }
+              // .td2{
+              //   width: 22%;
+              // }
+              // .td3{
+              //   width: 28%;
+              //   &i-input{
+              //     width: 80%;
+              //   }
+              // }
+              // .td4{
+              //   width: 16%;
+              // }
+              // .td5{
+              //   width: 18%;
+              // }
+              .ivu-table-column-center{
+                background: #d8ebfe
+              }
+              th {
+                // &:first-of-type {
+                //   padding-left: 10px;
+                // }
+                &:last-of-type {
+                  position: relative;
+                  .add-meter {
+                    margin: 5px 20px 0 0;
+                    color: #2d8cf0;
+                    font-size: 20px;
+                    cursor: pointer;
+                  }
+                }
+                &.price-unit {
+                  position: relative;
+                  span {
+                    position: absolute;
+                    width: 40px;
+                    font-size: 12px;
+                    color: #80848f;
+                    bottom: 0;
+                    right: 50%;
+                    -webkit-transform: translateX(50%);
+                    -moz-transform: translateX(50%);
+                    -ms-transform: translateX(50%);
+                    -o-transform: translateX(50%);
+                    transform: translateX(50%);
+                  }
+                }
+              }
+            }
+          }
+          tbody {
+            font-size: 14px;
+            color: #80848f;
+            tr {
+              height: 40px;
+              td:not(.operation-td) {
+                max-width: 70px;
+                overflow: hidden;
+                white-space: nowrap;
+                -ms-text-overflow: ellipsis;
+                text-overflow: ellipsis;
+                // &:first-of-type {
+                //   padding-left: 10px;
+                // }
+                &.bind-line {
+                  position: relative;
+                  width: 20px;
+                }
+                &.bind-line-1 {
+                  background: url("../img/meter_bind_1.png");
+                }
+                &.bind-line-2 {
+                  background: url("../img/meter_bind_2.png");
+                }
+                &.bind-line-3 {
+                  background: url("../img/meter_bind_3.png");
+                }
+              }
+              // .td3{
+              //   width: 25%;
+              //   .ivu-input{
+              //     width: 80% !important;
+              //     text-align: center;
+              //   }
+              // }
+            }
+            tr:nth-child(2n){
+              background-color: #f9f9fb;
+            }
+          }
+        }
+        @media (max-width: 1450px) {
+          table {
+            thead {
+              font-size: 14px;
+            }
+            tbody {
+              font-size: 12px;
+            }
+          }
+        }
+      }
+      .colorRed{
+        color: red;
+      }
+    }
+  }
+  
+  // 弹窗样式
+  .add-meter-modal {
+    div {
+      font-size: 14px;
+    }
+    .modal-header {
+      font-size: 16px;
+    }
+    .input-wrapper {
+      display: flex;
+      justify-content: space-between;
+      width: 62%;
+      margin: 15px auto;
+      line-height: 32px;
+      > div {
+        width: 200px;
+        .electric-price, .init-price {
+          width: 160px;
+        }
+      }
+    }
+    .code-wrapper {
+      position: relative;
+      .meter-code {
+        position: absolute;
+        left: 100px;
+      }
+    }
+  }
+  
+  .page-bar{
+    display: none;
+  }
+
+  .btn-row {
+    margin-top: 50px !important;
+    display: flex !important;
+    justify-content: center !important;
+    button:first-child {
+      margin-right: 120px;
+    }
+  }

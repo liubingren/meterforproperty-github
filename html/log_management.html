@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../img/bt_logo.png">
     <title>智慧能源管理平台-日志管理</title>
 </head>
 <body>
@@ -20,7 +21,7 @@
                 <div class="content-wrapper">
                     <div class="search-group">
                         <i-input placeholder="请输入操作用户/模块/类别" size="large" style="width: 220px" v-model.trim="keywords" @on-keyup.enter="getLogInfor(1)"></i-input>
-                        <i-button type="primary" @click="getLogInfor(1)">搜索</i-button>
+                        <i-button type="primary" @click="getLogInfor(1)" class="log-check">搜索</i-button>
                     </div>
                     <table>
                         <thead>
@@ -51,9 +52,6 @@
             </i-content>
         </layout>
     </layout>
-    <!-- 个人密码设置 -->
-    <user-config></user-config>
-    <pwd-config></pwd-config>
 </div>
 <script src="../js/log_management.js"></script>
 </body>
